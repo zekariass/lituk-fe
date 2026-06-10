@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="23 66 274 112" width="274" height="112">
+  <defs>
+    <linearGradient id="carBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e63946"/>
+      <stop offset="100%" style="stop-color:#9d0208"/>
+    </linearGradient>
+    <linearGradient id="carRoof" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b"/>
+      <stop offset="100%" style="stop-color:#e63946"/>
+    </linearGradient>
+    <linearGradient id="windshield" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8dadc;stop-opacity:0.9"/>
+      <stop offset="100%" style="stop-color:#457b9d;stop-opacity:0.7"/>
+    </linearGradient>
+    <linearGradient id="wheelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#495057"/>
+      <stop offset="100%" style="stop-color:#212529"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Vehicle group — mirrored horizontally -->
+  <g transform="translate(320,0) scale(-1,1)">
+    <ellipse cx="160" cy="157" rx="95" ry="8" fill="#000" opacity="0.35"/>
+    <rect x="45" y="110" width="230" height="48" fill="url(#carBody)" rx="6" filter="url(#shadow)"/>
+    <path d="M100 110 L130 72 L200 68 L230 110 Z" fill="url(#carRoof)" filter="url(#shadow)"/>
+    <path d="M133 107 L142 76 L196 73 L210 107 Z" fill="url(#windshield)" opacity="0.85"/>
+    <path d="M145 82 L148 76 L175 73 L178 80 Z" fill="white" opacity="0.2"/>
+    <path d="M103 107 L115 76 L135 74 L132 107 Z" fill="url(#windshield)" opacity="0.7"/>
+    <line x1="160" y1="110" x2="160" y2="156" stroke="#9d0208" stroke-width="1.5" opacity="0.6"/>
+    <rect x="138" y="128" width="16" height="4" fill="#ffd60a" rx="2"/>
+    <rect x="170" y="128" width="16" height="4" fill="#ffd60a" rx="2"/>
+    <rect x="50" y="116" width="22" height="12" fill="#ffd60a" rx="3" filter="url(#glow)"/>
+    <rect x="50" y="116" width="22" height="12" fill="white" rx="3" opacity="0.4"/>
+    <path d="M50 118 L25 112 L25 126 L50 126 Z" fill="#ffd60a" opacity="0.12"/>
+    <rect x="248" y="116" width="22" height="12" fill="#ff0000" rx="3" opacity="0.9"/>
+    <rect x="252" y="118" width="14" height="8" fill="#ff6b6b" rx="2" opacity="0.7"/>
+    <rect x="45" y="146" width="30" height="8" fill="#c9184a" rx="3"/>
+    <rect x="47" y="148" width="26" height="4" fill="#ff6b6b" rx="2" opacity="0.4"/>
+    <rect x="245" y="146" width="30" height="8" fill="#c9184a" rx="3"/>
+    <circle cx="100" cy="152" r="22" fill="url(#wheelGrad)" filter="url(#shadow)"/>
+    <circle cx="100" cy="152" r="15" fill="#343a40"/>
+    <circle cx="100" cy="152" r="8" fill="#6c757d"/>
+    <circle cx="100" cy="152" r="3" fill="#adb5bd"/>
+    <line x1="100" y1="137" x2="100" y2="167" stroke="#adb5bd" stroke-width="1.5"/>
+    <line x1="85" y1="152" x2="115" y2="152" stroke="#adb5bd" stroke-width="1.5"/>
+    <line x1="89.4" y1="141.4" x2="110.6" y2="162.6" stroke="#adb5bd" stroke-width="1.5"/>
+    <line x1="110.6" y1="141.4" x2="89.4" y2="162.6" stroke="#adb5bd" stroke-width="1.5"/>
+    <circle cx="220" cy="152" r="22" fill="url(#wheelGrad)" filter="url(#shadow)"/>
+    <circle cx="220" cy="152" r="15" fill="#343a40"/>
+    <circle cx="220" cy="152" r="8" fill="#6c757d"/>
+    <circle cx="220" cy="152" r="3" fill="#adb5bd"/>
+    <line x1="220" y1="137" x2="220" y2="167" stroke="#adb5bd" stroke-width="1.5"/>
+    <line x1="205" y1="152" x2="235" y2="152" stroke="#adb5bd" stroke-width="1.5"/>
+    <line x1="209.4" y1="141.4" x2="230.6" y2="162.6" stroke="#adb5bd" stroke-width="1.5"/>
+    <line x1="230.6" y1="141.4" x2="209.4" y2="162.6" stroke="#adb5bd" stroke-width="1.5"/>
+  </g>
+</svg>

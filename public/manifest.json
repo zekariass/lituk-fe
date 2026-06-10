@@ -1,0 +1,36 @@
+{
+  "id": "/",
+  "name": "HabeshaDrive - Driving Theory Test",
+  "short_name": "HabeshaDrive",
+  "description": "Master your driving theory test with 1000+ questions",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#065f46",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ],
+  "prefer_related_applications": false,
+  "categories": ["education", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Start Revision",
+      "short_name": "Revision",
+      "description": "Start a revision session",
+      "url": "/revision/start",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Mock Test",
+      "short_name": "Test",
+      "description": "Take a mock test",
+      "url": "/mock-test/start",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}
