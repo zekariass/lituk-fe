@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { useRevisionStore, useAuthStore, useCategoryStore, useContentLanguageStore } from '@/lib/store'
+import { useRevisionStore, useAuthStore, useCategoryStore, useContentLanguageStore, useLocalSettingsStore } from '@/lib/store'
 import { getLocalizedText } from '@/components/revision/content-utils'
 import { ChevronDown, ChevronLeft, Loader2, RotateCcw, CheckCircle2, XCircle, AlertCircle, X } from 'lucide-react'
 import { OptionList } from '@/components/revision/option-list'
@@ -25,6 +25,7 @@ export default function RevisionHistoryPage() {
   const { isAuthenticated, user } = useAuthStore()
   const { categories }      = useCategoryStore()
   const { language: selectedLanguage, direction, setLanguage } = useContentLanguageStore()
+  const { showOriginalAndTranslation } = useLocalSettingsStore()
   const {
     initializeSession,
     openCompletedSession,
@@ -86,18 +87,51 @@ export default function RevisionHistoryPage() {
     }
   }
 
-  // Get translated question text based on selected language
-  const getTranslatedQuestionText = (question: any) => {
-    if (!selectedLanguage || !question.translations?.[selectedLanguage]) return question.text
-    const translation = question.translations[selectedLanguage] as any
-    return translation?.text || translation?.question || question.text
+  const resolveDualText = (
+    original: string | undefined,
+    translated: string | undefined
+  ): ReactNode => {
+    if (!showOriginalAndTranslation || selectedLanguage === 'en' || !original) {
+      return translated ?? original ?? ''
+    }
+    if (!translated || translated === original) {
+      return original
+    }
+    return (
+      <>
+        <span>{original}</span>
+        <span className="block mt-1.5 opacity-60 text-sm">{translated}</span>
+      </>
+    )
   }
 
-  // Get translated option text based on selected language
-  const getTranslatedOptionLabel = (option: any) => {
+  // Get translated question text based on selected language
+  const getTranslatedQuestionText = (question: any): ReactNode => {
+    const originalText = question.text || ''
+    if (!selectedLanguage || !question.translations?.[selectedLanguage]) {
+      return resolveDualText(originalText, undefined)
+    }
+    const translation = question.translations[selectedLanguage] as any
+    const translatedText = translation?.text || translation?.question
+    return resolveDualText(originalText, translatedText)
+  }
+
+  // Get translated option text based on selected language (string for alt text)
+  const getTranslatedOptionLabel = (option: any): string => {
     if (!selectedLanguage || !option.translations?.[selectedLanguage]) return option.text
     const translation = option.translations[selectedLanguage] as any
     return translation?.text || option.text
+  }
+
+  // Get translated option display text (ReactNode for rendering)
+  const getTranslatedOptionDisplayLabel = (option: any): ReactNode => {
+    const originalText = option.text || ''
+    if (!selectedLanguage || !option.translations?.[selectedLanguage]) {
+      return resolveDualText(originalText, undefined)
+    }
+    const translation = option.translations[selectedLanguage] as any
+    const translatedText = translation?.text
+    return resolveDualText(originalText, translatedText)
   }
 
   return (
@@ -392,7 +426,8 @@ export default function RevisionHistoryPage() {
                               answerLocked={true}
                               correctOptionIds={correctIds}
                               onSelectOption={() => undefined}
-                              getOptionLabel={(option) => getTranslatedOptionLabel(option)}
+                              getOptionLabel={(option) => getTranslatedOptionDisplayLabel(option)}
+                              getOptionAltText={(option) => getTranslatedOptionLabel(option)}
                             />
                           </div>
                         )}

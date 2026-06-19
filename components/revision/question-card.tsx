@@ -101,7 +101,7 @@
 
 "use client"
 
-import { JSX, useState, useEffect } from 'react'
+import { JSX, useState, useEffect, type ReactNode } from 'react'
 import Image from 'next/image'
 import { createPortal } from 'react-dom'
 import { Question, QuestionOption, Tip, Explanation } from '@/lib/types'
@@ -120,11 +120,11 @@ interface RevisionQuestionCardProps {
   answerLocked: boolean
   correctOptionIds?: number[]
   explanation?: Explanation
-  explanationText: string
+  explanationText: ReactNode
   showExplanation: boolean
   tips: Tip[]
   showTips: boolean
-  questionText: string
+  questionText: ReactNode
   explanationTitle: string
   tipsTitle: string
   tipLabel: (index: number) => string
@@ -139,8 +139,10 @@ interface RevisionQuestionCardProps {
   onToggleTips: () => void
   onFlagToggled?: (isFlagged: boolean) => void
   getOptionLabel: (option: QuestionOption) => string
+  getOptionDisplayLabel?: (option: QuestionOption) => ReactNode
   getTipText: (tip: Tip) => string
-  navigation: () => React.ReactNode
+  navigation: () => ReactNode
+  showOriginalAndTranslation?: boolean
 }
 
 export function RevisionQuestionCard({
@@ -168,8 +170,10 @@ export function RevisionQuestionCard({
   onToggleTips,
   onFlagToggled,
   getOptionLabel,
+  getOptionDisplayLabel,
   getTipText,
   navigation,
+  showOriginalAndTranslation,
 }: RevisionQuestionCardProps) {
   const { language: selectedLanguage, direction } = useContentLanguageStore()
   const [isFlagged, setIsFlagged] = useState(question.isFlagged ?? false)
@@ -188,44 +192,58 @@ export function RevisionQuestionCard({
     setIsFlagged(question.isFlagged ?? false)
   }, [question.id, question.isFlagged])
 
+  // Helper to render dual text when enabled
+  const renderDualText = (
+    original: string | undefined,
+    translated: string | undefined
+  ): ReactNode => {
+    if (!showOriginalAndTranslation || selectedLanguage === 'en' || !original) {
+      return translated ?? original ?? ''
+    }
+    if (!translated || translated === original) {
+      return original
+    }
+    return (
+      <>
+        <span>{original}</span>
+        <span className="block mt-1.5 opacity-60 text-sm">{translated}</span>
+      </>
+    )
+  }
+
   // Get question text based on selected language
-  const getQuestionText = () => {
-    const originalText = questionText
+  const getQuestionText = (): ReactNode => {
+    const originalText = typeof questionText === 'string' ? questionText : undefined
     if (!selectedLanguage || selectedLanguage === '' || !question.translations) {
-      return originalText
+      return questionText
     }
     const translation = question.translations[selectedLanguage] as Record<string, unknown> | undefined
-    if (translation) {
-      const translatedText = (translation.question || translation.text) as string | undefined
-      if (translatedText) return translatedText
-    }
-    return originalText
+    const translatedText = translation
+      ? ((translation.question || translation.text) as string | undefined)
+      : undefined
+    return renderDualText(originalText, translatedText)
   }
 
   // Get option text based on selected language
-  const getTranslatedOptionLabel = (option: QuestionOption): string => {
+  const getTranslatedOptionLabel = (option: QuestionOption): ReactNode => {
     const originalText = getOptionLabel(option)
     if (!selectedLanguage || selectedLanguage === '' || !option.translations) {
-      return originalText
+      return getOptionDisplayLabel?.(option) ?? originalText
     }
     const translation = option.translations[selectedLanguage] as Record<string, unknown> | undefined
-    if (translation && typeof translation.text === 'string') {
-      return translation.text
-    }
-    return originalText
+    const translatedText = translation && typeof translation.text === 'string' ? translation.text : undefined
+    return renderDualText(originalText, translatedText)
   }
 
   // Get explanation text based on selected language
-  const getExplanationText = () => {
-    const originalText = explanationText
+  const getExplanationText = (): ReactNode => {
+    const originalText = typeof explanationText === 'string' ? explanationText : undefined
     if (!selectedLanguage || selectedLanguage === '' || !explanation?.translations) {
-      return originalText
+      return explanationText
     }
     const translation = explanation.translations[selectedLanguage] as Record<string, unknown> | undefined
-    if (translation && typeof translation.text === 'string') {
-      return translation.text
-    }
-    return originalText
+    const translatedText = translation && typeof translation.text === 'string' ? translation.text : undefined
+    return renderDualText(originalText, translatedText)
   }
 
   const displayQuestionText = getQuestionText()
@@ -351,6 +369,7 @@ export function RevisionQuestionCard({
             correctOptionIds={correctOptionIds}
             onSelectOption={onSelectOption}
             getOptionLabel={getTranslatedOptionLabel}
+            getOptionAltText={(option) => option.text}
           />
 
           {/* Toggle buttons */}

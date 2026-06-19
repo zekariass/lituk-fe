@@ -71,13 +71,37 @@ export const useMockTestStore = create<MockTestStore>()(
       updateAnswer: (questionId, optionId) => {
         const state = get().testState;
         if (!state) return;
+
+        const question = state.questions.find((q) => q.questionId === questionId);
+        if (!question) return;
+
+        const correctOptionIds = question.options
+          ?.filter((o) => o.isCorrect)
+          ?.map((o) => o.id)
+          ?.sort((a, b) => a - b) ?? [];
+        const correctCount = correctOptionIds.length;
+
         const existingAnswer = state.answers[questionId];
         const questionStartTime = existingAnswer?.answeredAt || Date.now();
         const currentSelections = existingAnswer?.selectedOptionIds ?? [];
-        const toggledSelections = currentSelections.includes(optionId)
-          ? currentSelections.filter((id) => id !== optionId)
-          : [...currentSelections, optionId];
-        const nextSelections = Array.from(new Set(toggledSelections)).sort((a, b) => a - b);
+
+        let nextSelected: number[];
+        if (correctCount <= 1) {
+          // Single-correct: replace selection
+          nextSelected = currentSelections.includes(optionId) ? [] : [optionId];
+        } else {
+          // Multi-correct: toggle with FIFO rotation when at cap
+          const idx = currentSelections.indexOf(optionId);
+          if (idx >= 0) {
+            nextSelected = currentSelections.filter((_, i) => i !== idx);
+          } else if (currentSelections.length < correctCount) {
+            nextSelected = [...currentSelections, optionId];
+          } else {
+            nextSelected = [...currentSelections.slice(1), optionId];
+          }
+        }
+
+        const nextSelections = Array.from(new Set(nextSelected)).sort((a, b) => a - b);
         const timeTaken = Math.floor((Date.now() - questionStartTime) / 1000);
 
         const nextAnswers = { ...state.answers };

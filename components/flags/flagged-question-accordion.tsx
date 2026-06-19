@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { FlaggedQuestionResponse, QuestionOption, Tip, UserLanguageInfo } from '@/lib/types';
-import { useFlaggedQuestionsStore, useContentLanguageStore, useAuthStore } from '@/lib/store';
+import { useFlaggedQuestionsStore, useContentLanguageStore, useAuthStore, useLocalSettingsStore } from '@/lib/store';
 import { OptionList } from '@/components/revision/option-list';
 import { TipsPanel } from '@/components/revision/tips-panel';
 import { sortAssets } from '@/components/revision/content-utils';
@@ -26,6 +26,7 @@ export function FlaggedQuestionAccordion({
 }: FlaggedQuestionAccordionProps) {
   // Get global language from content language store
   const { language: globalLanguage, direction, setLanguage: setGlobalLanguage } = useContentLanguageStore();
+  const { showOriginalAndTranslation } = useLocalSettingsStore();
   const user = useAuthStore(state => state.user);
   const languageFlags = user?.subscription?.withTranslation !== false ? (user?.userLanguages || []) : [];
   
@@ -109,61 +110,99 @@ export function FlaggedQuestionAccordion({
     }
   }, [showTips, showExplanation, tips, explanations, questionId, fetchTips, fetchExplanation]);
 
+  const resolveDualText = (
+    original: string | undefined,
+    translated: string | undefined
+  ): ReactNode => {
+    if (!showOriginalAndTranslation || language === 'en' || !original) {
+      return translated ?? original ?? '';
+    }
+    if (!translated || translated === original) {
+      return original;
+    }
+    return (
+      <>
+        <span>{original}</span>
+        <span className="block mt-1.5 opacity-60 text-sm">{translated}</span>
+      </>
+    );
+  };
+
   // Get translated question text - memoized to re-compute when language changes
-  const questionText = useMemo(() => {
+  const questionText = useMemo((): ReactNode => {
     const originalText = question.question || question.text || '';
-    
+
     // If no translations available, return original text
-    if (!question.translations) return originalText;
-    
+    if (!question.translations) return resolveDualText(originalText, undefined);
+
     // Try to get translation for current language
     const translation = question.translations[language as keyof typeof question.translations];
+    let translatedText: string | undefined;
     if (translation && typeof translation === 'object') {
-      // Try 'question' field first, then 'text' field
-      const translatedText = (translation as any).question || (translation as any).text;
-      if (translatedText) return translatedText;
+      translatedText = (translation as any).question || (translation as any).text;
     }
-    
-    // Fallback to original text
-    return originalText;
-  }, [language, question]);
 
-  // Get translated option label
+    return resolveDualText(originalText, translatedText);
+  }, [language, question, showOriginalAndTranslation]);
+
+  // Get translated option label (string for alt text)
   const getOptionLabel = (option: QuestionOption): string => {
     const originalText = option.text;
-    
+
     // If no translations available, return original text
     if (!option.translations) return originalText;
-    
+
     // Try to get translation for current language
     const translation = option.translations[language as keyof typeof option.translations];
     if (translation && typeof translation === 'object' && 'text' in translation) {
       return (translation as any).text || originalText;
     }
-    
+
     // Fallback to original text
     return originalText;
   };
 
+  // Get translated option display label (ReactNode for rendering)
+  const getOptionDisplayLabel = (option: QuestionOption): ReactNode => {
+    const originalText = option.text;
+
+    if (!option.translations) return resolveDualText(originalText, undefined);
+
+    const translation = option.translations[language as keyof typeof option.translations];
+    let translatedText: string | undefined;
+    if (translation && typeof translation === 'object' && 'text' in translation) {
+      translatedText = (translation as any).text;
+    }
+
+    return resolveDualText(originalText, translatedText);
+  };
+
   // Get translated explanation text - memoized to re-compute when language or explanations change
-  const explanationText = useMemo(() => {
+  const explanationText = useMemo((): string => {
     const explanation = explanations[questionId];
     if (!explanation) return '';
-    
+
     const originalText = explanation.text;
-    
+
     // If no translations available, return original text
     if (!explanation.translations) return originalText;
-    
+
     // Try to get translation for current language
     const translation = explanation.translations[language as keyof typeof explanation.translations];
     if (translation && typeof translation === 'object' && 'text' in translation) {
       return (translation as any).text || originalText;
     }
-    
+
     // Fallback to original text
     return originalText;
   }, [language, explanations, questionId]);
+
+  // Get original explanation text for dual display
+  const originalExplanationText = useMemo((): string => {
+    const explanation = explanations[questionId];
+    if (!explanation) return '';
+    return explanation.text || '';
+  }, [explanations, questionId]);
 
   // Get translated tip text
   const getTipText = (tip: Tip): string => {
@@ -359,7 +398,8 @@ export function FlaggedQuestionAccordion({
                 return Array.from(new Set(toggled)).sort((a, b) => a - b)
               })
             }}
-            getOptionLabel={getOptionLabel}
+            getOptionLabel={getOptionDisplayLabel}
+            getOptionAltText={getOptionLabel}
           />
 
           {/* Action buttons */}
@@ -430,13 +470,32 @@ export function FlaggedQuestionAccordion({
                 <BookOpenText size={16} className="text-blue-400" />
                 <h3 className="text-sm font-semibold text-foreground">Explanation</h3>
               </div>
-              <div 
-                className="text-sm leading-relaxed text-[hsl(var(--explanation-foreground))] quill-content
-                           [&_p]:text-[hsl(var(--explanation-foreground))] [&_li]:text-[hsl(var(--explanation-foreground))]
-                           [&_strong]:text-[hsl(var(--explanation-foreground))] [&_strong]:font-semibold
-                           [&_a]:text-[hsl(var(--explanation-foreground))] [&_a]:underline"
-                dangerouslySetInnerHTML={{ __html: explanationText }}
-              />
+              {showOriginalAndTranslation && language !== 'en' && originalExplanationText ? (
+                <>
+                  <div
+                    className="text-sm leading-relaxed text-[hsl(var(--explanation-foreground))] quill-content
+                               [&_p]:text-[hsl(var(--explanation-foreground))] [&_li]:text-[hsl(var(--explanation-foreground))]
+                               [&_strong]:text-[hsl(var(--explanation-foreground))] [&_strong]:font-semibold
+                               [&_a]:text-[hsl(var(--explanation-foreground))] [&_a]:underline"
+                    dangerouslySetInnerHTML={{ __html: originalExplanationText }}
+                  />
+                  <div
+                    className="mt-3 text-sm leading-relaxed opacity-60 quill-content
+                               [&_p]:text-[hsl(var(--explanation-foreground))] [&_li]:text-[hsl(var(--explanation-foreground))]
+                               [&_strong]:text-[hsl(var(--explanation-foreground))] [&_strong]:font-semibold
+                               [&_a]:text-[hsl(var(--explanation-foreground))] [&_a]:underline"
+                    dangerouslySetInnerHTML={{ __html: explanationText }}
+                  />
+                </>
+              ) : (
+                <div
+                  className="text-sm leading-relaxed text-[hsl(var(--explanation-foreground))] quill-content
+                             [&_p]:text-[hsl(var(--explanation-foreground))] [&_li]:text-[hsl(var(--explanation-foreground))]
+                             [&_strong]:text-[hsl(var(--explanation-foreground))] [&_strong]:font-semibold
+                             [&_a]:text-[hsl(var(--explanation-foreground))] [&_a]:underline"
+                  dangerouslySetInnerHTML={{ __html: explanationText }}
+                />
+              )}
             </div>
           )}
 

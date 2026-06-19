@@ -11,5 +11,6 @@ export { useContentLanguageStore } from './content-language-store';
 export { useFlaggedQuestionsStore } from './flagged-questions-store';
 export { useJurisdictionLanguageStore } from './jurisdiction-language-store';
 export { useStaticContentLanguageStore } from './static-content-language-store';
+export { useLocalSettingsStore } from './local-settings-store';
 export type { ContentLanguage } from './content-language-store';
 export type { StaticLocale } from './static-content-language-store';

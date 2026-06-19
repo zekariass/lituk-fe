@@ -155,7 +155,7 @@ function LoginPageContent() {
                 />
               </div>
               <span className="font-syne font-extrabold text-[20px] tracking-tight text-foreground">
-                HabeshaDrive
+                Life In The UK
               </span>
             </Link>
 

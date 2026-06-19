@@ -822,13 +822,13 @@
 
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useMockTestStore } from '@/lib/store/mock-test-store'
 import { useAuthStore } from '@/lib/store/auth-store'
-import { useContentLanguageStore } from '@/lib/store'
+import { useContentLanguageStore, useLocalSettingsStore } from '@/lib/store'
 import api from '@/lib/api/client'
 import { checkEntitlementStatus } from '@/lib/services/payment-service'
 import { SubmitMockTestAnswersRequest } from '@/lib/types/mock-test'
@@ -846,6 +846,7 @@ export default function MockTestPage() {
   const user = useAuthStore(state => state.user)
   const languageFlags = user?.subscription?.withTranslation !== false ? (user?.userLanguages || []) : []
   const { direction, setLanguage } = useContentLanguageStore()
+  const { showOriginalAndTranslation } = useLocalSettingsStore()
 
   const {
     testState,
@@ -900,6 +901,18 @@ export default function MockTestPage() {
       activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
     }
   }, [testState?.currentQuestionIndex])
+
+  // Intercept browser back button to show submit dialog instead of leaving
+  useEffect(() => {
+    if (!testState) return
+    const handlePopState = () => {
+      window.history.pushState(null, '', window.location.href)
+      setShowSubmitDialog(true)
+    }
+    window.history.pushState(null, '', window.location.href)
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [testState])
 
   const loadTest = async () => {
     try {
@@ -985,21 +998,39 @@ export default function MockTestPage() {
     }
   }
 
-  const getQuestionText = (question: any) => {
+  const resolveDualText = (
+    original: string | undefined,
+    translated: string | undefined
+  ): ReactNode => {
+    if (!showOriginalAndTranslation || selectedLanguage === 'en' || !original) {
+      return translated ?? original ?? ''
+    }
+    if (!translated || translated === original) {
+      return original
+    }
+    return (
+      <>
+        <span>{original}</span>
+        <span className="block mt-1.5 opacity-60 text-sm">{translated}</span>
+      </>
+    )
+  }
+
+  const getQuestionText = (question: any): ReactNode => {
     if (!question) return ''
     const originalText = question.questionText || ''
     if (!selectedLanguage || selectedLanguage === '' || !question.translations) {
       return originalText
     }
     const translation = question.translations[selectedLanguage]
+    let translatedText: string | undefined
     if (translation && typeof translation === 'object') {
-      const translatedText = (translation as any).text || (translation as any).question
-      if (translatedText) return translatedText
+      translatedText = (translation as any).text || (translation as any).question
     }
-    return originalText
+    return resolveDualText(originalText, translatedText)
   }
 
-  const getOptionText = (option: any) => {
+  const getOptionText = (option: any): string => {
     if (!option) return ''
     const originalText = option.text || ''
     if (!selectedLanguage || selectedLanguage === '' || !option.translations) {
@@ -1010,6 +1041,20 @@ export default function MockTestPage() {
       return (translation as any).text || originalText
     }
     return originalText
+  }
+
+  const getOptionDisplayText = (option: any): ReactNode => {
+    if (!option) return ''
+    const originalText = option.text || ''
+    if (!selectedLanguage || selectedLanguage === '' || !option.translations) {
+      return originalText
+    }
+    const translation = option.translations[selectedLanguage]
+    let translatedText: string | undefined
+    if (translation && typeof translation === 'object' && 'text' in translation) {
+      translatedText = (translation as any).text
+    }
+    return resolveDualText(originalText, translatedText)
   }
 
   const handleAutoSubmit = async () => {
@@ -1378,13 +1423,25 @@ export default function MockTestPage() {
           <div className="bg-card border border-border/60 rounded-2xl overflow-hidden
                           shadow-[0_2px_20px_rgba(0,0,0,0.06)] animate-fade-up">
 
-            {/* Card header — category */}
-            <div className="flex items-center px-6 pt-5 pb-4 border-b border-border/50">
+            {/* Card header — category + answered pill */}
+            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-border/50 gap-3">
               <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-semibold
                                tracking-[0.08em] uppercase text-muted-foreground
                                bg-muted/60 border border-border/50 w-fit">
                 {currentQuestion.categoryName}
               </span>
+              {(() => {
+                const currentAnswer = testState.answers[currentQuestion.questionId]
+                const isAnswered = currentAnswer && currentAnswer.selectedOptionIds.length > 0
+                return (
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-semibold tracking-wide border
+                    ${isAnswered
+                      ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                      : 'bg-gray-100/60 text-gray-500 border-gray-200/50'}`}>
+                    {isAnswered ? 'Answered' : 'Remaining'}
+                  </span>
+                )
+              })()}
             </div>
 
             {/* Card body — content direction controlled here */}
@@ -1443,20 +1500,23 @@ export default function MockTestPage() {
 
               {/* Options */}
               {(() => {
-                const allOptionsHaveAssets = currentQuestion.options.length > 0 &&
-                  currentQuestion.options.every((opt) => opt.asset?.url)
+                const sortedOptions = [...currentQuestion.options].sort(
+                  (a, b) => (a.position ?? 0) - (b.position ?? 0)
+                )
+                const allOptionsHaveAssets = sortedOptions.length > 0 &&
+                  sortedOptions.every((opt) => opt.asset?.url)
                 const isGridLayout = allOptionsHaveAssets
 
                 return (
                   <div className={isGridLayout
-                    ? "grid grid-cols-2 sm:grid-cols-4 gap-2.5"
+                    ? "grid grid-cols-2 gap-3"
                     : "flex flex-col gap-2"}>
-                    {currentQuestion.options.map((option, optIdx) => {
+                    {sortedOptions.map((option, optIdx) => {
                       const isSelected =
                         isQuestionAnswered(currentQuestion.questionId) &&
                         (testState.answers[currentQuestion.questionId]?.selectedOptionIds ?? []).includes(option.id)
 
-                      const optionLabel = String.fromCharCode(65 + optIdx) // A, B, C, D
+                      const letter = String.fromCharCode(65 + optIdx)
 
                       if (isGridLayout) {
                         return (
@@ -1466,17 +1526,25 @@ export default function MockTestPage() {
                             className={`option-btn w-full rounded-xl border text-start cursor-pointer p-3
                                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--primary)/0.35)]
                                         ${isSelected
-                                          ? 'border-[hsl(var(--success)/0.5)] bg-[hsl(var(--success)/0.06)] shadow-[0_0_0_1px_hsl(var(--success)/0.2)]'
+                                          ? 'border-emerald-700 bg-emerald-700 shadow-[0_4px_24px_rgba(4,120,87,0.35)]'
                                           : 'border-border/60 bg-card hover:border-[hsl(var(--primary)/0.4)] hover:bg-[hsl(var(--primary)/0.03)] hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)]'}`}
                           >
                             <div className="flex flex-col items-center gap-2">
-                              {/* Checkmark floats to inline-end */}
-                              <div className="w-full flex justify-end">
-                                <div className={`h-5 w-5 rounded-md border-2 flex items-center justify-center shrink-0
+                              {/* Top row: letter badge left, check indicator right */}
+                              <div className="w-full flex items-center justify-between">
+                                <span className={`inline-flex items-center justify-center w-5 h-5 rounded-md text-[10px] font-bold
+                                  ${isSelected ? 'bg-white/20 text-white' : 'bg-muted/60 text-muted-foreground'}`}>
+                                  {letter}
+                                </span>
+                                <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0
                                                 ${isSelected
-                                                  ? 'border-[hsl(var(--success))] bg-[hsl(var(--success)/0.12)]'
+                                                  ? 'border-white bg-white'
                                                   : 'border-border/60 bg-transparent'}`}>
-                                  {isSelected && <div className="w-2 h-2 rounded-sm bg-[hsl(var(--success))]" />}
+                                  {isSelected && (
+                                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" className="text-[hsl(var(--primary))]">
+                                      <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                  )}
                                 </div>
                               </div>
 
@@ -1492,13 +1560,13 @@ export default function MockTestPage() {
                                 </div>
                               )}
 
-                              {getOptionText(option) && (
+                              {getOptionDisplayText(option) && (
                                 <span
                                   className={`text-[11px] font-medium leading-snug text-center
-                                              ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}
+                                              ${isSelected ? 'text-white font-extrabold' : 'text-muted-foreground'}`}
                                   dir={direction}
                                 >
-                                  {getOptionText(option)}
+                                  {getOptionDisplayText(option)}
                                 </span>
                               )}
                             </div>
@@ -1513,23 +1581,16 @@ export default function MockTestPage() {
                             className={`option-btn w-full rounded-xl border text-start cursor-pointer px-4 py-3.5
                                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--primary)/0.35)]
                                         ${isSelected
-                                          ? 'border-[hsl(var(--success)/0.5)] bg-[hsl(var(--success)/0.05)] shadow-[0_0_0_1px_hsl(var(--success)/0.15)]'
+                                          ? 'border-emerald-700 bg-emerald-700 shadow-[0_4px_24px_rgba(4,120,87,0.35)]'
                                           : 'border-border/60 bg-card hover:border-[hsl(var(--primary)/0.4)] hover:bg-[hsl(var(--primary)/0.025)] hover:shadow-[0_2px_12px_rgba(0,0,0,0.05)]'}`}
                           >
                             <div className="flex items-center gap-3.5">
 
-                              {/* Checkbox — always visible, fills green on selection */}
-                              <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0
-                                              transition-all duration-200
-                                              ${isSelected
-                                                ? 'bg-[hsl(var(--success))] border-[hsl(var(--success))] shadow-[0_2px_8px_hsl(var(--success)/0.35)]'
-                                                : 'bg-transparent border-border/60'}`}>
-                                {isSelected && (
-                                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                                    <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                                  </svg>
-                                )}
-                              </div>
+                              {/* Letter badge */}
+                              <span className={`inline-flex items-center justify-center w-6 h-6 rounded-md text-[11px] font-bold shrink-0
+                                ${isSelected ? 'bg-white/20 text-white' : 'bg-muted/60 text-muted-foreground'}`}>
+                                {letter}
+                              </span>
 
                               {option.asset?.url && (
                                 <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0 rounded-lg overflow-hidden bg-muted/30 border border-border/40">
@@ -1543,14 +1604,26 @@ export default function MockTestPage() {
                                 </div>
                               )}
 
-                              {getOptionText(option) && (
+                              {getOptionDisplayText(option) && (
                                 <span
-                                  className={`flex-1 text-sm font-medium leading-snug
-                                              ${isSelected ? 'text-foreground' : 'text-muted-foreground'}`}
+                                  className={`flex-1 text-sm leading-snug
+                                              ${isSelected ? 'text-white font-extrabold' : 'text-muted-foreground font-semibold'}`}
                                 >
-                                  {getOptionText(option)}
+                                  {getOptionDisplayText(option)}
                                 </span>
                               )}
+
+                              {/* Trailing check indicator */}
+                              <div className={`ms-auto h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0
+                                              ${isSelected
+                                                ? 'border-white bg-white'
+                                                : 'border-border/60 bg-transparent'}`}>
+                                {isSelected && (
+                                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none" className="text-[hsl(var(--primary))]">
+                                    <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                )}
+                              </div>
                             </div>
                           </button>
                         )

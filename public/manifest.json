@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "HabeshaDrive - Driving Theory Test",
-  "short_name": "HabeshaDrive",
-  "description": "Master your driving theory test with 1000+ questions",
+  "name": "Life In The UK Test Practice",
+  "short_name": "Life In The UK",
+  "description": "Practice for the Life in the UK test with mock exams and progress tracking",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

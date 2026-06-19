@@ -356,7 +356,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
           </button>
 
           <Link href="/practice" className="flex items-center gap-2">
-            <img src="/logo.svg" alt="HabeshaDrive logo" className="w-6 h-6 shrink-0" />
+            <img src="/logo.svg" alt="Life In The UK logo" className="w-6 h-6 shrink-0" />
             <span className="font-syne font-bold text-lg text-white">
               <span className="text-white">LITUK</span>
             </span>
@@ -435,11 +435,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
               <Link href="/practice" className="flex items-center gap-2.5 group">
                 <img
                   src="/logo.svg"
-                  alt="HabeshaDrive logo"
+                  alt="Life In The UK logo"
                   className="w-7 h-7 shrink-0 transition-transform duration-200 group-hover:scale-105"
                 />
                 <span className="font-syne font-bold text-sm tracking-tight">
-                  Habesha<span className="text-primary">Drive</span>
+                  Life In The UK
                 </span>
               </Link>
             </div>

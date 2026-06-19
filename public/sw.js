@@ -1,4 +1,4 @@
-// const CACHE_NAME = 'habeshadrive-v1'
+// const CACHE_NAME = 'lifeintheuk-v1'
 // const OFFLINE_URL = '/'
 
 // self.addEventListener('install', (event) => {
@@ -35,7 +35,7 @@
 
 
 
-const CACHE_NAME = "habeshadrive-v2";
+const CACHE_NAME = "lifeintheuk-v2";
 const OFFLINE_FALLBACK_PAGE = "/offline.html";
 
 // Precache essential assets

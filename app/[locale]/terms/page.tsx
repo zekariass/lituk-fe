@@ -36,7 +36,7 @@ export default function TermsAndConditionsPage() {
                 Acknowledgement 1
               </p>
               <p className="text-sm leading-6 text-amber-800 dark:text-amber-300">
-                The Driver and Vehicle Standards Agency (DVSA) has given permission for the reproduction of Crown copyright material. DVSA does not accept responsibility for the accuracy of the reproduction.
+                The UK Home Office has given permission for the reproduction of Crown copyright material. The Home Office does not accept responsibility for the accuracy of the reproduction.
               </p>
             </div>
             <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950">
@@ -44,7 +44,7 @@ export default function TermsAndConditionsPage() {
                 Acknowledgement 2
               </p>
               <p className="text-sm leading-6 text-amber-800 dark:text-amber-300">
-                This product includes the Driver and Vehicle Standards Agency (DVSA) revision question bank.
+                This product includes official Life in the UK test revision materials.
               </p>
             </div>
             <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950">
@@ -61,7 +61,7 @@ export default function TermsAndConditionsPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              Welcome to HabeshaDrive (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;). These Terms and Conditions (&ldquo;Terms&rdquo;) govern your access to and use of the HabeshaDrive website, mobile application, and all related services (collectively, the &ldquo;Service&rdquo;). HabeshaDrive is a driving theory test preparation platform designed to help learner drivers study for the UK driving theory test.
+              Welcome to Life In The UK Test Practice (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;). These Terms and Conditions (&ldquo;Terms&rdquo;) govern your access to and use of the Life In The UK Test Practice website, mobile application, and all related services (collectively, the &ldquo;Service&rdquo;). Life In The UK Test Practice is a Life in the UK test preparation platform designed to help users study for the Life in the UK test.
             </p>
             <p className="text-foreground/70 leading-relaxed">
               By accessing or using the Service, you agree to be bound by these Terms. If you do not agree with any part of these Terms, you must not use the Service.
@@ -113,11 +113,11 @@ export default function TermsAndConditionsPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">4. Description of the Service</h2>
             <p className="text-foreground/70 leading-relaxed mb-3">
-              HabeshaDrive provides an online driving theory test preparation platform that includes:
+              Life In The UK Test Practice provides an online Life in the UK test preparation platform that includes:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-foreground/70">
-              <li><strong>Practice Questions:</strong> A comprehensive bank of theory test questions organised by category and topic</li>
-              <li><strong>Mock Tests:</strong> Simulated driving theory tests that mirror the format and timing of the real exam</li>
+              <li><strong>Practice Questions:</strong> A comprehensive bank of Life in the UK test questions organised by category and topic</li>
+              <li><strong>Mock Tests:</strong> Simulated Life in the UK tests that mirror the format and timing of the real exam</li>
               <li><strong>Traffic Signs:</strong> A reference library of traffic signs organised by category to aid visual learning</li>
               <li><strong>Flagged Questions:</strong> The ability to flag and revisit questions you find challenging</li>
               <li><strong>Progress Tracking:</strong> Tools to monitor your learning progress, scores, and areas for improvement</li>
@@ -139,7 +139,7 @@ export default function TermsAndConditionsPage() {
 
             <h3 className="text-xl font-semibold mb-3 mt-6">5.2 Payment Processing</h3>
             <p className="text-foreground/70 leading-relaxed">
-              On mobile devices, all payments are processed securely through the Apple App Store or Google Play Store, depending on your device. By subscribing, you agree to the respective store&apos;s terms of service in addition to these Terms. On the HabeshaDrive website, payments are processed through Stripe. We do not store your payment card details on our servers.
+              On mobile devices, all payments are processed securely through the Apple App Store or Google Play Store, depending on your device. By subscribing, you agree to the respective store&apos;s terms of service in addition to these Terms. On the Life In The UK Test Practice website, payments are processed through Stripe. We do not store your payment card details on our servers.
             </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">5.3 Billing</h3>
@@ -150,7 +150,7 @@ export default function TermsAndConditionsPage() {
             <h3 className="text-xl font-semibold mb-3 mt-6">5.4 Refunds</h3>
             <p className="text-foreground/70 leading-relaxed">
               Refund requests for in-app purchases are handled by the Apple App Store or Google Play Store in accordance with their respective refund policies. If you need further assistance, please contact us at{' '}
-              <a href="mailto:support@habeshadrive.com" className="text-primary hover:underline">support@habeshadrive.com</a>.
+              <a href="mailto:support@lifeintheuktestpractice.uk" className="text-primary hover:underline">support@lifeintheuktestpractice.uk</a>.
             </p>
           </section>
 
@@ -178,12 +178,12 @@ export default function TermsAndConditionsPage() {
 
             <h3 className="text-xl font-semibold mb-3 mt-6">7.1 Our Content</h3>
             <p className="text-foreground/70 leading-relaxed">
-              All content on the Service, including but not limited to text, graphics, logos, icons, images, audio, software, and the overall design and layout, is the property of HabeshaDrive or its licensors and is protected by copyright, trademark, and other intellectual property laws.
+              All content on the Service, including but not limited to text, graphics, logos, icons, images, audio, software, and the overall design and layout, is the property of Life In The UK Test Practice or its licensors and is protected by copyright, trademark, and other intellectual property laws.
             </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">7.2 Crown Copyright Material</h3>
             <p className="text-foreground/70 leading-relaxed">
-              Certain question content reproduced within the Service is Crown copyright material used with the permission of the Driver and Vehicle Standards Agency (DVSA). The DVSA does not accept responsibility for the accuracy of the reproduction. All Crown copyright material remains the property of the Crown.
+              Certain question content reproduced within the Service is Crown copyright material used with the permission of the UK Home Office. The UK Home Office does not accept responsibility for the accuracy of the reproduction. All Crown copyright material remains the property of the Crown.
             </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">7.3 Your Use</h3>
@@ -198,17 +198,17 @@ export default function TermsAndConditionsPage() {
 
             <h3 className="text-xl font-semibold mb-3 mt-6">8.1 AI-Generated Content</h3>
             <p className="text-foreground/70 leading-relaxed">
-              Certain contents of tips (images, videos, and text explanations) provided alongside questions are generated or assisted by artificial intelligence. While we review this content for quality and relevance, AI-generated material may occasionally contain inaccuracies or errors. AI-generated content is provided for supplementary educational purposes only and should not be treated as an authoritative or definitive source. You should always refer to official DVSA materials for the most accurate and up-to-date information.
+              Certain contents of tips (images, videos, and text explanations) provided alongside questions are generated or assisted by artificial intelligence. While we review this content for quality and relevance, AI-generated material may occasionally contain inaccuracies or errors. AI-generated content is provided for supplementary educational purposes only and should not be treated as an authoritative or definitive source. You should always refer to official Life in the UK test materials for the most accurate and up-to-date information.
             </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">8.2 No Guarantee of Exam Success</h3>
             <p className="text-foreground/70 leading-relaxed">
-              HabeshaDrive is a study aid and preparation tool. We do not guarantee that using the Service will result in you passing the official UK driving theory test or any other examination. Your success depends on your individual effort, preparation, and performance.
+              Life In The UK Test Practice is a study aid and preparation tool. We do not guarantee that using the Service will result in you passing the official Life in the UK test or any other examination. Your success depends on your individual effort, preparation, and performance.
             </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">8.3 Accuracy of Content</h3>
             <p className="text-foreground/70 leading-relaxed">
-              While we strive to ensure that all content is accurate and up to date, we make no warranties or representations regarding the completeness, accuracy, or reliability of any content on the Service. The DVSA driving theory test content and rules may change, and there may be a delay before such changes are reflected on our platform.
+              While we strive to ensure that all content is accurate and up to date, we make no warranties or representations regarding the completeness, accuracy, or reliability of any content on the Service. The official Life in the UK test content and rules may change, and there may be a delay before such changes are reflected on our platform.
             </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">8.4 &ldquo;As Is&rdquo; Basis</h3>
@@ -221,14 +221,14 @@ export default function TermsAndConditionsPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">9. Limitation of Liability</h2>
             <p className="text-foreground/70 leading-relaxed mb-3">
-              To the maximum extent permitted by applicable law, HabeshaDrive and its directors, employees, partners, and affiliates shall not be liable for:
+              To the maximum extent permitted by applicable law, Life In The UK Test Practice and its directors, employees, partners, and affiliates shall not be liable for:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-foreground/70 mb-4">
               <li>Any indirect, incidental, special, consequential, or punitive damages</li>
               <li>Any loss of profits, data, use, goodwill, or other intangible losses</li>
               <li>Any damages resulting from your use of or inability to use the Service</li>
               <li>Any damages resulting from unauthorised access to or alteration of your data</li>
-              <li>Any failure to pass the official driving theory test after using the Service</li>
+              <li>Any failure to pass the official Life in the UK test after using the Service</li>
             </ul>
             <p className="text-foreground/70 leading-relaxed">
               Our total liability to you for all claims arising from or related to the Service shall not exceed the amount you paid to us in the twelve (12) months preceding the event giving rise to the claim.
@@ -307,7 +307,7 @@ export default function TermsAndConditionsPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">15. Indemnification</h2>
             <p className="text-foreground/70 leading-relaxed">
-              You agree to indemnify, defend, and hold harmless HabeshaDrive, its officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or in any way connected with your access to or use of the Service, your violation of these Terms, or your infringement of any intellectual property or other rights of any third party.
+              You agree to indemnify, defend, and hold harmless Life In The UK Test Practice, its officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or in any way connected with your access to or use of the Service, your violation of these Terms, or your infringement of any intellectual property or other rights of any third party.
             </p>
           </section>
 
@@ -323,7 +323,7 @@ export default function TermsAndConditionsPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">17. Entire Agreement</h2>
             <p className="text-foreground/70 leading-relaxed">
-              These Terms, together with the Privacy Policy and any other legal notices published by us on the Service, constitute the entire agreement between you and HabeshaDrive regarding your use of the Service.
+              These Terms, together with the Privacy Policy and any other legal notices published by us on the Service, constitute the entire agreement between you and Life In The UK Test Practice regarding your use of the Service.
             </p>
           </section>
 
@@ -335,7 +335,7 @@ export default function TermsAndConditionsPage() {
             </p>
             <p className="text-foreground/70 leading-relaxed">
               <strong>Email:</strong>{' '}
-              <a href="mailto:support@habeshadrive.com" className="text-primary hover:underline">support@habeshadrive.com</a>
+              <a href="mailto:support@lifeintheuktestpractice.uk" className="text-primary hover:underline">support@lifeintheuktestpractice.uk</a>
             </p>
           </section>
 
@@ -344,7 +344,7 @@ export default function TermsAndConditionsPage() {
         {/* Footer */}
         <div className="mt-16 pt-8 border-t border-border">
           <p className="text-sm text-muted-foreground text-center">
-            By using HabeshaDrive, you acknowledge that you have read and understood these Terms and Conditions.
+            By using Life In The UK Test Practice, you acknowledge that you have read and understood these Terms and Conditions.
           </p>
         </div>
 

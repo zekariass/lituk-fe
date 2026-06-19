@@ -161,6 +161,7 @@
     "loadingLicenceCategories": "Loading licence categories...",
     "noLicenceCategories": "No licence categories found",
     "flags": "Flags",
+    "guide": "Guide",
     "trafficSigns": "Traffic Signs",
     "licenceCategory": "Licence Category",
     "contactUs": "Contact Us",
@@ -349,7 +350,7 @@
     "footerCookies": "Cookies",
     "footerContact": "Contact",
     "footerDisclaimer": "This is an independent practice platform. We are not affiliated with or endorsed by the UK government or Home Office. Questions are based on publicly available material from the <strong>Life in the United Kingdom: A Guide for New Residents</strong> handbook.",
-    "footerDvsaName": ""
+    "footerOfficialName": ""
   },
   "loginPage": {
     "home": "Home",
@@ -413,9 +414,10 @@
     "trafficSignsLabel": "Traffic Signs",
     "trafficSignsDescription": "Learn and memorize all traffic signs and their meanings",
     "flagsDescription": "Review questions you've flagged for later study",
+    "guideDescription": "Quick reference guide for key Life in the UK facts",
     "getStarted": "Get Started",
-    "dvsaQuestionBankAck": "Acknowledgement",
-    "dvsaQuestionBank": "This product includes the Driver and Vehicle Standards Agency (DVSA) revision question bank."
+    "officialQuestionBankAck": "Acknowledgement",
+    "officialQuestionBank": "This product includes official Life in the UK test revision materials."
   },
   "mockTestStartPage": {
     "noConfigTitle": "No Configuration Available",
@@ -649,8 +651,8 @@
     "realLifeTab": "Photos"
   },
   "pwa": {
-    "installTitle": "Install HabeshaDrive",
-    "installDescription": "Install or add HabeshaDrive to your phone for quick access and a native app experience.",
+    "installTitle": "Install Life In The UK",
+    "installDescription": "Install or add Life In The UK to your phone for quick access and a native app experience.",
     "benefit1": "Instant access from your phone",
     "benefit2": "Works offline — no internet needed",
     "benefit3": "Faster and lighter than a native app",
@@ -660,7 +662,7 @@
     "iosStep1Suffix": "Share button in Safari",
     "iosStep2": "Then tap \"Add to Home Screen\"",
     "androidManual": "Open your browser menu (⋮) and tap \"Add to Home Screen\" or \"Install App\".",
-    "alreadyInstalled": "HabeshaDrive is already installed on your device. Open it from your home screen!",
+    "alreadyInstalled": "Life In The UK is already installed on your device. Open it from your home screen!",
     "dismiss": "Not now"
   }
 }

@@ -1,19 +1,20 @@
 "use client"
 
-import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
+import { useEffect, useMemo, useState, useCallback, useRef, type ReactNode } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { useRevisionStore, useAuthStore, useCategoryStore, useContentLanguageStore } from '@/lib/store'
+import { useRevisionStore, useAuthStore, useCategoryStore, useContentLanguageStore, useLocalSettingsStore } from '@/lib/store'
 import { RevisionQuestionCard } from '@/components/revision/question-card'
 import { NavigationBar } from '@/components/revision/navigation-bar'
 import { OptionList } from '@/components/revision/option-list'
-import { getLocalizedText, normalizeExplanationText, normalizeTipText } from '@/components/revision/content-utils'
+import { getLocalizedText, normalizeTipText } from '@/components/revision/content-utils'
 import { ChevronDown, ArrowLeft, Loader2, RotateCcw, BookOpen, CheckCircle2, XCircle, AlertCircle } from 'lucide-react'
 import Image from 'next/image'
 
 export default function RevisionPracticePage() {
   const t = useTranslations('revisionPracticePage')
   const { language: contentLanguage, direction, setLanguage } = useContentLanguageStore()
+  const { showOriginalAndTranslation } = useLocalSettingsStore()
   const router       = useRouter()
   const searchParams = useSearchParams()
   const isReviewMode = searchParams.get('mode') === 'review'
@@ -30,6 +31,8 @@ export default function RevisionPracticePage() {
     timers,
     questionStartTimes,
     flaggedQuestions,
+    viewedExplanation,
+    viewedTip,
     setCurrentIndex,
     submitAnswer,
     fetchExplanation,
@@ -62,6 +65,17 @@ export default function RevisionPracticePage() {
     : []
   const isAnswered             = Boolean(currentAnswer)
   const isLastQuestionInLoadedSet = currentIndex === questions.length - 1
+
+  const currentCorrectOptionIds = useMemo(() => {
+    if (!currentQuestion) return []
+    const ids = currentQuestion.options
+      ?.filter((o) => o.isCorrect)
+      ?.map((o) => o.id)
+      ?.sort((a, b) => a - b) ?? []
+    return ids
+  }, [currentQuestion])
+
+  const isLocked = currentCorrectOptionIds.length > 0 && pendingSelectedOptionIds.length >= currentCorrectOptionIds.length
 
   const currentExplanation = currentQuestionId ? explanations[currentQuestionId] : undefined
   const currentTips        = currentQuestionId ? tips[currentQuestionId] ?? [] : []
@@ -113,13 +127,35 @@ export default function RevisionPracticePage() {
   if (!currentQuestion || !currentQuestionId) return null
 
   // ── Text resolvers ───────────────────────────────────────────────────────────
-  const resolveQuestionText = useCallback(() =>
-    getLocalizedText(currentQuestion.text, currentQuestion.translations, contentLanguage, ['question', 'text', 'body']), [currentQuestion, contentLanguage])
+  const resolveDualText = useCallback((
+    original: string | undefined,
+    translated: string | undefined
+  ): ReactNode => {
+    if (!showOriginalAndTranslation || contentLanguage === 'en' || !original) {
+      return translated ?? original ?? ''
+    }
+    if (!translated || translated === original) {
+      return original
+    }
+    return (
+      <>
+        <span>{original}</span>
+        <span className="block mt-1.5 opacity-60 text-sm">{translated}</span>
+      </>
+    )
+  }, [showOriginalAndTranslation, contentLanguage])
 
-  const resolveOptionText = useCallback((option: { text: string; translations?: Record<string, Record<string, unknown>> }) =>
-    getLocalizedText(option.text, option.translations, contentLanguage, ['text', 'body', 'label']), [contentLanguage])
+  const resolveQuestionText = useCallback((): ReactNode => {
+    const translated = getLocalizedText(currentQuestion.text, currentQuestion.translations, contentLanguage, ['question', 'text', 'body'])
+    return resolveDualText(currentQuestion.text, translated)
+  }, [currentQuestion, contentLanguage, resolveDualText])
 
-  const resolveTipText = useCallback((tip: (typeof currentTips)[number]) =>
+  const resolveOptionText = useCallback((option: { text: string; translations?: Record<string, Record<string, unknown>> }): ReactNode => {
+    const translated = getLocalizedText(option.text, option.translations, contentLanguage, ['text', 'body', 'label'])
+    return resolveDualText(option.text, translated)
+  }, [contentLanguage, resolveDualText])
+
+  const resolveTipText = useCallback((tip: (typeof currentTips)[number]): string =>
     normalizeTipText(tip, contentLanguage), [contentLanguage])
 
   // ── Timer ────────────────────────────────────────────────────────────────────
@@ -132,22 +168,34 @@ export default function RevisionPracticePage() {
 
   // ── Handlers ─────────────────────────────────────────────────────────────────
   const handleSelectOption = async (optionId: number) => {
-    if (isAnswered) return
-    setSelectedOptionIds((s) => {
-      const previous = s[currentQuestionId] ?? []
-      const toggled = previous.includes(optionId)
-        ? previous.filter((id) => id !== optionId)
-        : [...previous, optionId]
-      const deduped = Array.from(new Set(toggled)).sort((a, b) => a - b)
-      return { ...s, [currentQuestionId]: deduped }
-    })
-    try {
-      await Promise.all([fetchExplanation(currentQuestionId), fetchTips(currentQuestionId)])
-      markExplanationViewed(currentQuestionId)
-      markTipViewed(currentQuestionId)
-      setExplanationVisibility((s) => ({ ...s, [currentQuestionId]: true }))
-      setTipsVisibility((s) => ({ ...s, [currentQuestionId]: true }))
-    } catch { /* silently fail */ }
+    if (isAnswered || isLocked) return
+
+    const previous = selectedOptionIds[currentQuestionId] ?? []
+    const togglingOff = previous.includes(optionId)
+    let next: number[]
+
+    if (togglingOff) {
+      next = previous.filter((id) => id !== optionId).sort((a, b) => a - b)
+    } else {
+      if (currentCorrectOptionIds.length > 0 && previous.length >= currentCorrectOptionIds.length) {
+        return // prevent over-selection
+      }
+      next = Array.from(new Set([...previous, optionId])).sort((a, b) => a - b)
+    }
+
+    setSelectedOptionIds((s) => ({ ...s, [currentQuestionId]: next }))
+
+    // Auto-lock & auto-reveal
+    const becameLocked = currentCorrectOptionIds.length > 0 && next.length >= currentCorrectOptionIds.length
+    if (becameLocked) {
+      try {
+        await Promise.all([fetchExplanation(currentQuestionId), fetchTips(currentQuestionId)])
+        markExplanationViewed(currentQuestionId)
+        markTipViewed(currentQuestionId)
+        setExplanationVisibility((s) => ({ ...s, [currentQuestionId]: true }))
+        setTipsVisibility((s) => ({ ...s, [currentQuestionId]: true }))
+      } catch { /* silently fail */ }
+    }
   }
 
   const submitCurrentAnswer = async (): Promise<boolean> => {
@@ -155,13 +203,15 @@ export default function RevisionPracticePage() {
     const selections = Array.from(new Set(pendingSelectedOptionIds)).sort((a, b) => a - b)
     if (selections.length === 0) return false
     setQuestionElapsedSeconds(currentQuestionId, elapsedSeconds)
+    const wasExplanationViewed = viewedExplanation[currentQuestionId] ?? false
+    const wasTipViewed = viewedTip[currentQuestionId] ?? false
     try {
       await submitAnswer(currentSession.id, {
         questionId: currentQuestionId,
         selectedOptionIds: selections,
         timeTakenSeconds: elapsedSeconds,
-        viewedExplanation: true,
-        viewedTip: true,
+        viewedExplanation: wasExplanationViewed,
+        viewedTip: wasTipViewed,
       })
       return true
     } catch { return false }
@@ -320,7 +370,8 @@ export default function RevisionPracticePage() {
           {/* Question accordion list */}
           <div className="space-y-2 rp-fade-up" style={{ animationDelay: '0.07s' }}>
             {questions.map((question, index) => {
-              const questionText = getLocalizedText(question.text, question.translations, contentLanguage, ['question', 'text', 'body'])
+              const translatedQuestionText = getLocalizedText(question.text, question.translations, contentLanguage, ['question', 'text', 'body'])
+              const questionText = resolveDualText(question.text, translatedQuestionText)
               const answer       = answers[question.id]
               const isExpanded   = Boolean(expandedReviewQuestions[question.id])
               const isCorrect    = answer?.isCorrect
@@ -383,9 +434,10 @@ export default function RevisionPracticePage() {
                         answerLocked
                         correctOptionIds={answer?.correctOptionIds ?? []}
                         onSelectOption={() => undefined}
-                        getOptionLabel={(option) =>
-                          getLocalizedText(option.text, option.translations, contentLanguage, ['text', 'body', 'label'])
-                        }
+                        getOptionLabel={(option) => {
+                          const translated = getLocalizedText(option.text, option.translations, contentLanguage, ['text', 'body', 'label'])
+                          return resolveDualText(option.text, translated)
+                        }}
                       />
                     </div>
                   )}
@@ -492,14 +544,14 @@ export default function RevisionPracticePage() {
                 : currentQuestion.isFlagged
             }}
             selectedOptionIds={pendingSelectedOptionIds}
-            answerLocked={isAnswered}
-            correctOptionIds={currentAnswer?.correctOptionIds ?? []}
+            answerLocked={isAnswered || isLocked}
+            correctOptionIds={currentCorrectOptionIds}
             explanation={currentExplanation}
-            explanationText={normalizeExplanationText(currentExplanation, contentLanguage)}
+            explanationText={currentExplanation?.text ?? ''}
             showExplanation={showExplanation}
             tips={currentTips}
             showTips={showTips}
-            questionText={resolveQuestionText()}
+            questionText={currentQuestion.text}
             explanationTitle={t('explanation')}
             tipsTitle={t('tips')}
             tipLabel={(index) => t('tipNumber', { index })}
@@ -513,9 +565,10 @@ export default function RevisionPracticePage() {
             onToggleExplanation={() => void toggleExplanation()}
             onToggleTips={() => void toggleTips()}
             onFlagToggled={handleFlagToggled}
-            getOptionLabel={resolveOptionText}
+            getOptionLabel={(option) => option.text}
             getTipText={resolveTipText}
             navigation={navigation}
+            showOriginalAndTranslation={showOriginalAndTranslation}
           />
         </div>
 

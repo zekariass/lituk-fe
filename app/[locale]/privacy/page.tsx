@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
         {/* Header */}
         <div className="mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-            Habesha Drive Privacy Policy
+            Life In The UK Test Practice Privacy Policy
           </h1>
           <p className="text-muted-foreground">
             Last updated: March 5, 2026
@@ -32,10 +32,10 @@ export default function PrivacyPolicyPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              Welcome to Habesha Drive (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;). This Privacy Policy explains how we collect, use, store, share, and protect information when you use the Habesha Drive mobile application, website, and related services.
+              Welcome to Life In The UK Test Practice (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;). This Privacy Policy explains how we collect, use, store, share, and protect information when you use the Life In The UK Test Practice mobile application, website, and related services.
             </p>
             <p className="text-foreground/70 leading-relaxed">
-              We are committed to protecting your personal information and your right to privacy. By using Habesha Drive, you agree to the collection and use of information in accordance with this policy. If you do not agree with our policies and practices, please do not use our services.
+              We are committed to protecting your personal information and your right to privacy. By using Life In The UK Test Practice, you agree to the collection and use of information in accordance with this policy. If you do not agree with our policies and practices, please do not use our services.
             </p>
           </section>
 
@@ -43,7 +43,7 @@ export default function PrivacyPolicyPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">2. Scope of This Policy</h2>
             <p className="text-foreground/70 leading-relaxed">
-              This Privacy Policy applies to the Habesha Drive mobile application, our public website, and related services. The web version of this policy is provided for transparency and for app store requirements, including Google Play.
+              This Privacy Policy applies to the Life In The UK Test Practice mobile application, our public website, and related services. The web version of this policy is provided for transparency and for app store requirements, including Google Play.
             </p>
           </section>
 
@@ -61,7 +61,7 @@ export default function PrivacyPolicyPage() {
               <li>Subscribe to our services, including subscription status and purchase-related information needed to manage your subscription</li>
             </ul>
             <p className="text-foreground/70 leading-relaxed">
-              Subscriptions and purchase management are handled through RevenueCat and the applicable app store billing provider, such as Google Play Billing or Apple In-App Purchases, for the mobile application. On the Habesha Drive website, payments are processed through Stripe. Your payment and card information is collected and processed directly by these third-party payment providers and is never collected or stored by Habesha Drive. We only store payment event records, such as subscription status and transaction confirmations, received through payment provider webhooks.
+              Subscriptions and purchase management are handled through RevenueCat and the applicable app store billing provider, such as Google Play Billing or Apple In-App Purchases, for the mobile application. On the Life In The UK Test Practice website, payments are processed through Stripe. Your payment and card information is collected and processed directly by these third-party payment providers and is never collected or stored by Life In The UK Test Practice. We only store payment event records, such as subscription status and transaction confirmations, received through payment provider webhooks.
             </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">3.2 Guest User Information</h3>
@@ -69,7 +69,7 @@ export default function PrivacyPolicyPage() {
               When you first open the app, a guest user account may be automatically created. This allows you to use the app without registering for an account. Guest user accounts may use a unique anonymous or pseudonymous identifier connected to your selected language, jurisdiction, preferences, app progress, and history data.
             </p>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              Guest user account tokens or identifiers may be stored securely on your device. Guest users are available only in the Habesha Drive mobile app. There are no guest users on the Habesha Drive website.
+              Guest user account tokens or identifiers may be stored securely on your device. Guest users are available only in the Life In The UK Test Practice mobile app. There are no guest users on the Life In The UK Test Practice website.
             </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">3.3 Usage, Activity, and Diagnostic Information</h3>
@@ -87,7 +87,7 @@ export default function PrivacyPolicyPage() {
 
             <h3 className="text-xl font-semibold mb-3 mt-6">3.4 Location and Jurisdiction Information</h3>
             <p className="text-foreground/70 leading-relaxed">
-              We collect your selected country and jurisdiction information to provide you with relevant driving theory test content specific to your region. This is selected by you during initial setup and stored locally on your device.
+              We collect your selected country and jurisdiction information to provide you with relevant Life in the UK test content specific to your region. This is selected by you during initial setup and stored locally on your device.
             </p>
           </section>
 
@@ -109,7 +109,7 @@ export default function PrivacyPolicyPage() {
               We use the information we collect for the following purposes:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-foreground/70">
-              <li><strong>Service Delivery:</strong> To provide, maintain, and improve our driving theory test preparation services</li>
+              <li><strong>Service Delivery:</strong> To provide, maintain, and improve our Life in the UK test preparation services</li>
               <li><strong>Account Management:</strong> To create and manage your registered account or guest user account</li>
               <li><strong>Personalization:</strong> To customise your learning experience, track your progress, and show relevant app content</li>
               <li><strong>Payment and Subscription Management:</strong> To manage subscriptions, purchase status, billing events, and premium access through RevenueCat and the applicable app store billing provider</li>
@@ -124,7 +124,7 @@ export default function PrivacyPolicyPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">6. Third-Party Service Providers</h2>
             <p className="text-foreground/70 leading-relaxed mb-3">
-              We use trusted third-party service providers to operate, maintain, and improve Habesha Drive. These providers may process information on our behalf according to their own privacy policies and contractual obligations.
+              We use trusted third-party service providers to operate, maintain, and improve Life In The UK Test Practice. These providers may process information on our behalf according to their own privacy policies and contractual obligations.
             </p>
             <p className="text-foreground/70 leading-relaxed mb-3">
               Third-party service providers we use include:
@@ -180,21 +180,21 @@ export default function PrivacyPolicyPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">9. Account and Data Deletion</h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              Registered users can delete their Habesha Drive account themselves from the Profile screen in the mobile app or from the Profile page on the website.
+              Registered users can delete their Life In The UK Test Practice account themselves from the Profile screen in the mobile app or from the Profile page on the website.
             </p>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              Guest users do not have a registered account. Guest users are available only in the Habesha Drive mobile app. There are no guest users on the Habesha Drive website. Guest users can reset their history data in the mobile app. When a guest user resets their history data, the existing guest history data is cleared and a new empty guest user account is created automatically.
+              Guest users do not have a registered account. Guest users are available only in the Life In The UK Test Practice mobile app. There are no guest users on the Life In The UK Test Practice website. Guest users can reset their history data in the mobile app. When a guest user resets their history data, the existing guest history data is cleared and a new empty guest user account is created automatically.
             </p>
             <p className="text-foreground/70 leading-relaxed mb-4">
               If you encounter an error, or if you do not have access to the mobile app or website to delete your account, please contact us at{' '}
-              <a href="mailto:support@habeshadrive.com" className="text-primary hover:underline">support@habeshadrive.com</a>.
+              <a href="mailto:support@lifeintheuktestpractice.uk" className="text-primary hover:underline">support@lifeintheuktestpractice.uk</a>.
             </p>
             <p className="text-foreground/70 leading-relaxed mb-4">
               We will delete or anonymize personal information within 30 days of a valid deletion request, unless we are required to retain certain information for legal, security, fraud prevention, accounting, tax, subscription, app store transaction, or dispute-resolution purposes.
             </p>
             <p className="text-foreground/70 leading-relaxed">
               <strong>Account Deletion Instructions:</strong>{' '}
-              <a href="https://www.habeshadrive.com/account-deletion" className="text-primary hover:underline">https://www.habeshadrive.com/account-deletion</a>
+              <a href="https://www.lifeintheuktestpractice.uk/account-deletion" className="text-primary hover:underline">https://www.lifeintheuktestpractice.uk/account-deletion</a>
             </p>
           </section>
 
@@ -230,7 +230,7 @@ export default function PrivacyPolicyPage() {
             </ul>
             <p className="text-foreground/70 leading-relaxed">
               To exercise these rights, please contact us at{' '}
-              <a href="mailto:support@habeshadrive.com" className="text-primary hover:underline">support@habeshadrive.com</a>. We will respond to your request within 30 days.
+              <a href="mailto:support@lifeintheuktestpractice.uk" className="text-primary hover:underline">support@lifeintheuktestpractice.uk</a>. We will respond to your request within 30 days.
             </p>
           </section>
 
@@ -270,7 +270,7 @@ export default function PrivacyPolicyPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">14. International Data Transfers</h2>
             <p className="text-foreground/70 leading-relaxed">
-              Your information may be transferred to and processed in countries other than your country of residence where Habesha Drive or its service providers operate. These countries may have different data protection laws. We use appropriate safeguards where required to protect your personal information in accordance with this Privacy Policy.
+              Your information may be transferred to and processed in countries other than your country of residence where Life In The UK Test Practice or its service providers operate. These countries may have different data protection laws. We use appropriate safeguards where required to protect your personal information in accordance with this Privacy Policy.
             </p>
           </section>
 
@@ -278,10 +278,10 @@ export default function PrivacyPolicyPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">15. Children&apos;s Privacy</h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              Habesha Drive is not intended for children under the age of 13, and we do not knowingly collect personal information from children under 13. Our services are intended for users who are old enough to prepare for driving theory tests in their jurisdiction. If you are a parent or guardian and believe that a child has provided us with personal information, please contact us and we will take steps to delete the information.
+              Life In The UK Test Practice is not intended for children under the age of 13, and we do not knowingly collect personal information from children under 13. Our services are intended for users who are old enough to prepare for the Life in the UK test in their jurisdiction. If you are a parent or guardian and believe that a child has provided us with personal information, please contact us and we will take steps to delete the information.
             </p>
             <p className="text-foreground/70 leading-relaxed">
-              If Habesha Drive is ever made available to children or families, we will update this Privacy Policy and our data practices to comply with applicable children&apos;s privacy laws and Google Play Families Policy requirements.
+              If Life In The UK Test Practice is ever made available to children or families, we will update this Privacy Policy and our data practices to comply with applicable children&apos;s privacy laws and Google Play Families Policy requirements.
             </p>
           </section>
 
@@ -329,15 +329,15 @@ export default function PrivacyPolicyPage() {
             </p>
             <p className="text-foreground/70 leading-relaxed mb-2">
               <strong>Support:</strong>{' '}
-              <a href="mailto:support@habeshadrive.com" className="text-primary hover:underline">support@habeshadrive.com</a>
+              <a href="mailto:support@lifeintheuktestpractice.uk" className="text-primary hover:underline">support@lifeintheuktestpractice.uk</a>
             </p>
             <p className="text-foreground/70 leading-relaxed mb-2">
               <strong>Public Privacy Policy URL:</strong>{' '}
-              <a href="https://www.habeshadrive.com/privacy" className="text-primary hover:underline">https://www.habeshadrive.com/privacy</a>
+              <a href="https://www.lifeintheuktestpractice.uk/privacy" className="text-primary hover:underline">https://www.lifeintheuktestpractice.uk/privacy</a>
             </p>
             <p className="text-foreground/70 leading-relaxed">
               <strong>Account Deletion Instructions:</strong>{' '}
-              <a href="https://www.habeshadrive.com/account-deletion" className="text-primary hover:underline">https://www.habeshadrive.com/account-deletion</a>
+              <a href="https://www.lifeintheuktestpractice.uk/account-deletion" className="text-primary hover:underline">https://www.lifeintheuktestpractice.uk/account-deletion</a>
             </p>
           </section>
 
@@ -354,7 +354,7 @@ export default function PrivacyPolicyPage() {
         {/* Footer */}
         <div className="mt-16 pt-8 border-t border-border">
           <p className="text-sm text-muted-foreground text-center">
-            By using Habesha Drive, you acknowledge that you have read and understood this Privacy Policy.
+            By using Life In The UK Test Practice, you acknowledge that you have read and understood this Privacy Policy.
           </p>
         </div>
 

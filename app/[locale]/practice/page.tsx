@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/store'
 import { useTranslations } from 'next-intl'
-import { BookOpen, ChevronRight, ClipboardList, Flag, OctagonAlert, Loader2 } from 'lucide-react'
+import { BookOpen, ChevronRight, ClipboardList, FileText, Flag, OctagonAlert, Loader2 } from 'lucide-react'
 import { usePwaInstall } from '@/lib/hooks/use-pwa-install'
 import { useTelegramMiniApp } from '@/lib/utils/telegram-detect'
 import Image from 'next/image'
@@ -104,6 +104,13 @@ export default function RevisionStartPage() {
       description: tp('flagsDescription'),
       color: 'amber',
     },
+    {
+      href: '/guide',
+      icon: FileText,
+      label: t('guide'),
+      description: tp('guideDescription'),
+      color: 'red',
+    },
   ]
 
   return (
@@ -138,7 +145,7 @@ export default function RevisionStartPage() {
               </button>
             )}
             <a
-              href="https://apps.apple.com/gb/app/habesha-drive/id6770119178"
+              href="https://apps.apple.com/gb/app/life-in-the-uk-test-practice/id6770119178"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2
@@ -287,8 +294,8 @@ export default function RevisionStartPage() {
           })}
         </div>
         <div className="bg-amber-500/10 border border-border/50 rounded-xl p-4 text-center">
-          <p className="text-xl font-medium text-foreground/60 mb-4">{tp('dvsaQuestionBankAck')}</p>
-          <p className="text-sm font-medium text-foreground/60">{tp('dvsaQuestionBank')}</p>
+          <p className="text-xl font-medium text-foreground/60 mb-4">{tp('officialQuestionBankAck')}</p>
+          <p className="text-sm font-medium text-foreground/60">{tp('officialQuestionBank')}</p>
         </div>
       </div>
     </>

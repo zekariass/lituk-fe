@@ -1,7 +1,7 @@
 # Internationalization (i18n) Implementation
 
 ## Overview
-The HabeshaDrive application now supports three languages:
+The Life In The UK Test Practice application now supports three languages:
 - **English (en)** - Default
 - **Amharic (am)** - አማርኛ
 - **Tigrinya (ti)** - ትግርኛ
@@ -16,7 +16,7 @@ The HabeshaDrive application now supports three languages:
 ### File Structure
 
 ```
-habeshadrive/
+life-in-the-uk/
 ├── i18n/
 │   ├── config.ts          # Locale configuration and names
 │   ├── routing.ts         # Next-intl routing setup
@@ -61,7 +61,7 @@ All translation files follow the same structure with nested keys:
 ```json
 {
   "common": {
-    "appName": "HabeshaDrive",
+    "appName": "Life In The UK",
     "getStarted": "Get Started",
     ...
   },

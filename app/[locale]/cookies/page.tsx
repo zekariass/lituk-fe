@@ -31,10 +31,10 @@ export default function CookiePolicyPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              This Cookie Policy explains how HabeshaDrive (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;) uses cookies and similar technologies to recognise you when you visit our driving theory test preparation platform. It explains what these technologies are and why we use them, as well as your rights to control our use of them.
+              This Cookie Policy explains how Life In The UK Test Practice (&ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us&rdquo;) uses cookies and similar technologies to recognise you when you visit our Life in the UK test preparation platform. It explains what these technologies are and why we use them, as well as your rights to control our use of them.
             </p>
             <p className="text-foreground/70 leading-relaxed">
-              By using HabeshaDrive, you consent to the use of cookies and similar technologies as described in this policy.
+              By using Life In The UK Test Practice, you consent to the use of cookies and similar technologies as described in this policy.
             </p>
           </section>
 
@@ -51,7 +51,7 @@ export default function CookiePolicyPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">3. Technologies We Use</h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              HabeshaDrive uses the following storage technologies and mechanisms:
+              Life In The UK Test Practice uses the following storage technologies and mechanisms:
             </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">3.1 Local Storage</h3>
@@ -266,7 +266,7 @@ export default function CookiePolicyPage() {
             <ul className="list-disc pl-6 space-y-2 text-foreground/70 mb-4">
               <li>Open your browser's Developer Tools (usually F12)</li>
               <li>Go to the Application or Storage tab</li>
-              <li>Select Local Storage and clear the data for habeshadrive.com</li>
+              <li>Select Local Storage and clear the data for lifeintheuktestpractice.uk</li>
               <li>Alternatively, use your browser's "Clear browsing data" feature</li>
             </ul>
 
@@ -310,8 +310,8 @@ export default function CookiePolicyPage() {
               If you have any questions about our use of cookies or this Cookie Policy, please contact us:
             </p>
             <div className="bg-muted/30 border border-border rounded-lg p-6">
-              <p className="text-foreground/70 mb-2"><strong>Email:</strong> privacy@habeshadrive.com</p>
-              <p className="text-foreground/70"><strong>Support:</strong> support@habeshadrive.com</p>
+              <p className="text-foreground/70 mb-2"><strong>Email:</strong> privacy@lifeintheuktestpractice.uk</p>
+              <p className="text-foreground/70"><strong>Support:</strong> support@lifeintheuktestpractice.uk</p>
             </div>
           </section>
 
@@ -331,7 +331,7 @@ export default function CookiePolicyPage() {
         {/* Footer */}
         <div className="mt-16 pt-8 border-t border-border">
           <p className="text-sm text-muted-foreground text-center">
-            By continuing to use HabeshaDrive, you consent to our use of cookies and similar technologies as described in this policy.
+            By continuing to use Life In The UK Test Practice, you consent to our use of cookies and similar technologies as described in this policy.
           </p>
         </div>
 

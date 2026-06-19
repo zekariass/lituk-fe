@@ -18,7 +18,7 @@ export default function AccountDeletionPage() {
         {/* Header */}
         <div className="mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-            Habesha Drive Account Deletion
+            Life In The UK Test Practice Account Deletion
           </h1>
         </div>
 
@@ -29,13 +29,13 @@ export default function AccountDeletionPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">Registered Users</h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              Registered users can delete their Habesha Drive account themselves from the Profile screen in the mobile app or from the Profile page on the website.
+              Registered users can delete their Life In The UK Test Practice account themselves from the Profile screen in the mobile app or from the Profile page on the website.
             </p>
             <p className="text-foreground/70 leading-relaxed mb-3">
               To delete your registered account:
             </p>
             <ol className="list-decimal pl-6 space-y-2 text-foreground/70">
-              <li>Open the Habesha Drive mobile app or website.</li>
+              <li>Open the Life In The UK Test Practice mobile app or website.</li>
               <li>Go to the Profile screen or Profile page.</li>
               <li>Select the account deletion option.</li>
               <li>Confirm that you want to delete your account.</li>
@@ -46,7 +46,7 @@ export default function AccountDeletionPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-semibold mb-4">Guest Users</h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              Guest users are available only in the Habesha Drive mobile app. There are no guest users on the Habesha Drive website.
+              Guest users are available only in the Life In The UK Test Practice mobile app. There are no guest users on the Life In The UK Test Practice website.
             </p>
             <p className="text-foreground/70 leading-relaxed">
               Guest users can reset their history data in the mobile app. When a guest user resets their history data, the existing guest history data is cleared and a new empty guest account is created automatically.
@@ -60,7 +60,7 @@ export default function AccountDeletionPage() {
               If you encounter an error, or if you do not have access to the mobile app or website to delete your account, please contact us at:
             </p>
             <p className="text-foreground/70 leading-relaxed mb-2">
-              <a href="mailto:support@habeshadrive.com" className="text-primary hover:underline">support@habeshadrive.com</a>
+              <a href="mailto:support@lifeintheuktestpractice.uk" className="text-primary hover:underline">support@lifeintheuktestpractice.com</a>
             </p>
             <p className="text-foreground/70 leading-relaxed">
               You can also reach us using our{' '}

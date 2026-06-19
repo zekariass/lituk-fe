@@ -520,6 +520,7 @@
 
 "use client"
 
+import { type ReactNode } from "react"
 import { Check, CheckCircle2, X, XCircle } from "lucide-react"
 import Image from "next/image"
 import { QuestionOption } from "@/lib/types"
@@ -527,13 +528,16 @@ import { cn } from "@/lib/utils"
 import { getAssetUrl } from "@/lib/utils/asset-url"
 import { useContentLanguageStore } from "@/lib/store"
 
+type OptionState = "default" | "selected" | "correct" | "incorrect" | "revealCorrect"
+
 interface OptionListProps {
   options: QuestionOption[]
   selectedOptionIds?: number[]
   answerLocked: boolean
   correctOptionIds?: number[]
   onSelectOption: (optionId: number) => void
-  getOptionLabel: (option: QuestionOption) => string
+  getOptionLabel: (option: QuestionOption) => ReactNode
+  getOptionAltText?: (option: QuestionOption) => string
 }
 
 export function OptionList({
@@ -543,123 +547,137 @@ export function OptionList({
   correctOptionIds,
   onSelectOption,
   getOptionLabel,
+  getOptionAltText,
 }: OptionListProps) {
   const { direction } = useContentLanguageStore()
   const selectedIds = selectedOptionIds ?? []
-  const correctIds = correctOptionIds ?? []
+
   const resolvedCorrectIdSet = (() => {
-    if (correctIds.length > 0) return new Set(correctIds)
+    if (correctOptionIds && correctOptionIds.length > 0) return new Set(correctOptionIds)
     const inferred = options.filter((opt) => opt.isCorrect).map((opt) => opt.id)
     return new Set(inferred)
   })()
 
-  const totalCorrectCount    = resolvedCorrectIdSet.size
-  const selectedCorrectCount = selectedIds.filter((id) => resolvedCorrectIdSet.has(id)).length
-  const hasAllCorrectSelected = totalCorrectCount > 0 && selectedCorrectCount >= totalCorrectCount
-  const hasSingleCorrect = totalCorrectCount === 1
-  const allOptionsHaveAssets = options.length > 0 && options.every((opt) => opt.asset?.url)
-  const isGridLayout = allOptionsHaveAssets
+  const getState = (optionId: number): OptionState => {
+    if (!selectedIds.length) return "default"
+    if (answerLocked) {
+      const isSelected = selectedIds.includes(optionId)
+      const isCorrect = resolvedCorrectIdSet.has(optionId)
+      if (isSelected && isCorrect) return "correct"
+      if (isSelected && !isCorrect) return "incorrect"
+      if (!isSelected && isCorrect) return "revealCorrect"
+      return isSelected ? "selected" : "default"
+    }
+    return selectedIds.includes(optionId) ? "selected" : "default"
+  }
+
+  const hasImageOption = options.some((opt) => opt.asset?.url)
+  const isGridLayout = hasImageOption
+
+  const stateStyles: Record<OptionState, { border: string; bg: string; text: string; indicatorBorder: string; indicatorBg: string }> = {
+    default: {
+      border: "border-[#D1D5DB]",
+      bg: "bg-[#F9FAFB]",
+      text: "text-[#1F2937]",
+      indicatorBorder: "border-[#D1D5DB]",
+      indicatorBg: "bg-transparent",
+    },
+    selected: {
+      border: "border-[#1B6B4A]",
+      bg: "bg-[rgba(27,107,74,0.1)]",
+      text: "text-[#1B6B4A]",
+      indicatorBorder: "border-[#1B6B4A]",
+      indicatorBg: "bg-[rgba(27,107,74,0.1)]",
+    },
+    correct: {
+      border: "border-[#22C55E]",
+      bg: "bg-[rgba(34,197,94,0.1)]",
+      text: "text-[#15d85c]",
+      indicatorBorder: "border-[#22C55E]",
+      indicatorBg: "bg-[rgba(34,197,94,0.1)]",
+    },
+    incorrect: {
+      border: "border-[#EF4444]",
+      bg: "bg-[rgba(239,68,68,0.1)]",
+      text: "text-[#dc1c1c]",
+      indicatorBorder: "border-[#EF4444]",
+      indicatorBg: "bg-[rgba(239,68,68,0.1)]",
+    },
+    revealCorrect: {
+      border: "border-[#22C55E]",
+      bg: "bg-[rgba(34,197,94,0.05)]",
+      text: "text-[#15d85c]",
+      indicatorBorder: "border-[#22C55E]",
+      indicatorBg: "bg-[rgba(34,197,94,0.05)]",
+    },
+  }
 
   return (
     <div className={cn(
-      isGridLayout ? "grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-2 max-w-lg sm:max-w-xl" : "space-y-2"
+      isGridLayout ? "grid grid-cols-2 gap-3" : "space-y-2"
     )}>
-      {options.map((option) => {
-        const isSelected    = selectedIds.includes(option.id)
-        const isInCorrectSet = resolvedCorrectIdSet.has(option.id)
-        const knowsCorrectness = resolvedCorrectIdSet.size > 0 || typeof option.isCorrect === "boolean"
+      {options.map((option, index) => {
+        const state = getState(option.id)
+        const isSelected = selectedIds.includes(option.id)
+        const styles = stateStyles[state]
+        const optionLabel = getOptionLabel(option)
+        const optionAltText = getOptionAltText?.(option)
+          ?? (typeof optionLabel === 'string' ? optionLabel : `Option ${option.id}`)
+        const letter = String.fromCharCode(65 + index)
 
-        const shouldRevealCorrectOnSingle = hasSingleCorrect && selectedIds.length > 0 && !answerLocked
-
-        // Immediate feedback before answerLocked
-        const isSelectedCorrect   = isSelected && !answerLocked && knowsCorrectness && isInCorrectSet
-        const isSelectedIncorrect = isSelected && !answerLocked && knowsCorrectness && !isInCorrectSet
-
-        // Locked states (post-submit)
-        const isCorrectLocked   = answerLocked && isInCorrectSet
-        const isIncorrectLocked = answerLocked && isSelected && !isInCorrectSet
-
-        // Combined
-        const showAsCorrect        = isSelectedCorrect || isCorrectLocked || (shouldRevealCorrectOnSingle && isInCorrectSet)
-        const showAsIncorrect      = isSelectedIncorrect || isIncorrectLocked
-        const showNeutralSelected  = !answerLocked && isSelected && !showAsCorrect && !showAsIncorrect
-
-        const isOptionIndividuallyDisabled = !hasAllCorrectSelected
-          && totalCorrectCount > 1
-          && isSelected
-          && isInCorrectSet
-
-        const shouldDisableAfterSingleSelection = hasSingleCorrect && selectedIds.length > 0
-
-        const isDisabled = answerLocked || hasAllCorrectSelected || isOptionIndividuallyDisabled || shouldDisableAfterSingleSelection
-
-        // ── Derived style tokens ────────────────────────────────────────────
         const buttonCls = cn(
-          // Base
-          "w-full rounded-xl border text-start transition-all duration-200 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60",
+          "w-full rounded-xl border text-start transition-all duration-200",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/40",
-          // Padding varies by layout
           isGridLayout ? "p-3" : "p-4",
-          // State colours
-          showAsCorrect
-            ? "border-emerald-400/50 bg-green-500/[0.20] hover:bg-green-500/[0.25]"
-            : showAsIncorrect
-            ? "border-red-400/50 bg-red-400/[0.20] hover:bg-red-400/[0.25]"
-            : showNeutralSelected
-            ? "border-emerald-300/40 bg-green-500/[0.20]"
-            : answerLocked
-            ? "border-border bg-[var(--background)] opacity-60 cursor-default"
-            : "border-border bg-[var(--background)] hover:border-emerald-300 hover:bg-emerald-300/[0.15]"
+          styles.border,
+          styles.bg,
+          styles.text,
+          answerLocked
+            ? "cursor-default opacity-90"
+            : "cursor-pointer hover:opacity-90",
+          "disabled:cursor-not-allowed disabled:opacity-60"
         )
 
         const indicatorCls = cn(
           "flex h-5 w-5 items-center justify-center rounded-md border-2 shrink-0 transition-colors duration-200",
-          showAsCorrect
-            ? "border-emerald-400 bg-green-500/20"
-            : showAsIncorrect
-            ? "border-red-400 bg-red-400/20"
-            : showNeutralSelected
-            ? "border-emerald-300 bg-green-500/10"
-            : "border-border bg-transparent"
+          styles.indicatorBorder,
+          styles.indicatorBg
         )
 
         const labelCls = cn(
           "font-medium leading-snug transition-colors duration-200",
           isGridLayout ? "text-xs text-center mt-2" : "text-sm flex-1",
-          showAsCorrect   ? "text-white fw-bold"   :
-          showAsIncorrect ? "text-white fw-bold"        :
-          showNeutralSelected ? "text-[var(--foreground)]" :
-          "text-[var(--foreground)]"
+          styles.text
         )
 
         return (
           <button
             key={option.id}
             type="button"
-            disabled={isDisabled}
+            disabled={answerLocked}
             onClick={() => onSelectOption(option.id)}
             role="checkbox"
             aria-checked={isSelected}
             className={buttonCls}
           >
             {isGridLayout ? (
-              // ── Grid layout (image-only) ─────────────────────────────────
               <div className="flex flex-col items-center gap-0">
-                {/* Status indicator top-right */}
                 <div className="w-full flex justify-end mb-1.5">
                   <div className={indicatorCls}>
-                    {showAsCorrect      && <Check size={11} className="text-emerald-400" />}
-                    {showAsIncorrect    && <X     size={11} className="text-red-400"     />}
-                    {showNeutralSelected && <Check size={11} className="text-emerald-300" />}
+                    {(state === "selected" || state === "correct" || state === "revealCorrect") && (
+                      <Check size={11} className={styles.text} />
+                    )}
+                    {state === "incorrect" && (
+                      <X size={11} className={styles.text} />
+                    )}
                   </div>
                 </div>
 
                 {option.asset?.url && (
-                  <div className="relative w-full aspect-square rounded-lg overflow-hidden
-                                  bg-[var(--background)]">
+                  <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-[var(--background)]">
                     <Image
                       src={getAssetUrl(option.asset.url)}
-                      alt={getOptionLabel(option) || `Option ${option.id}`}
+                      alt={optionAltText}
                       fill
                       className="object-scale-down"
                       sizes="(max-width: 640px) 160px, 200px"
@@ -667,30 +685,29 @@ export function OptionList({
                   </div>
                 )}
 
-                {getOptionLabel(option) && (
-                  <span className={labelCls} dir={direction}>{getOptionLabel(option)}</span>
+                {optionLabel && (
+                  <span className={labelCls} dir={direction}>
+                    <span className="font-bold me-1">{letter}.</span>
+                    {optionLabel}
+                  </span>
                 )}
               </div>
             ) : (
-              // ── List layout ──────────────────────────────────────────────
-              // dir={direction} on the flex container flips the visual order
-              // (indicator on right, status icon on left for RTL) and ensures
-              // the label text renders in the correct direction via inheritance.
               <div className="flex items-center gap-3" dir={direction}>
-                {/* Indicator */}
                 <div className={indicatorCls}>
-                  {showAsCorrect      && <Check size={11} className="text-emerald-400" />}
-                  {showAsIncorrect    && <X     size={11} className="text-red-400"     />}
-                  {showNeutralSelected && <Check size={11} className="text-emerald-300" />}
+                  {(state === "selected" || state === "correct" || state === "revealCorrect") && (
+                    <Check size={11} className={styles.text} />
+                  )}
+                  {state === "incorrect" && (
+                    <X size={11} className={styles.text} />
+                  )}
                 </div>
 
-                {/* Image (if present) */}
                 {option.asset?.url && (
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0 rounded-lg
-                                  overflow-hidden bg-[var(--background)] border border-border">
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0 rounded-lg overflow-hidden bg-[var(--background)] border border-border">
                     <Image
                       src={getAssetUrl(option.asset.url)}
-                      alt={getOptionLabel(option) || "Option image"}
+                      alt={optionAltText}
                       fill
                       className="object-scale-down"
                       sizes="(max-width: 640px) 64px, 80px"
@@ -698,15 +715,20 @@ export function OptionList({
                   </div>
                 )}
 
-                {/* Label — dir inherited from parent, no need to repeat */}
-                {getOptionLabel(option) && (
-                  <span className={labelCls}>{getOptionLabel(option)}</span>
+                {optionLabel && (
+                  <span className={labelCls}>
+                    <span className="font-bold me-1">{letter}.</span>
+                    {optionLabel}
+                  </span>
                 )}
 
-                {/* Trailing status icon — ms-auto respects RTL (logical margin) */}
                 <div className="ms-auto shrink-0">
-                  {showAsCorrect   && <CheckCircle2 size={17} className="text-emerald-400" />}
-                  {showAsIncorrect && <XCircle      size={17} className="text-red-400"     />}
+                  {(state === "correct" || state === "revealCorrect") && (
+                    <CheckCircle2 size={17} className="text-[#22C55E]" />
+                  )}
+                  {state === "incorrect" && (
+                    <XCircle size={17} className="text-[#EF4444]" />
+                  )}
                 </div>
               </div>
             )}

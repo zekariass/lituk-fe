@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useAuthStore } from '@/lib/store/auth-store'
-import { useContentLanguageStore } from '@/lib/store'
+import { useContentLanguageStore, useLocalSettingsStore } from '@/lib/store'
 import { UserLanguageInfo } from '@/lib/types'
 
 export default function MockTestResultsPage() {
@@ -36,6 +36,7 @@ export default function MockTestResultsPage() {
   const user = useAuthStore(state => state.user)
   const languageFlags = user?.subscription?.withTranslation !== false ? (user?.userLanguages || []) : []
   const { direction, setLanguage } = useContentLanguageStore()
+  const { showOriginalAndTranslation } = useLocalSettingsStore()
 
   useEffect(() => { loadResults() }, [testId])
 
@@ -61,30 +62,53 @@ export default function MockTestResultsPage() {
     }
   }
 
-  const getQuestionText = (question: any) => {
+  const resolveDualText = (
+    original: string | undefined,
+    translated: string | undefined
+  ): ReactNode => {
+    if (!showOriginalAndTranslation || !selectedLanguage || selectedLanguage === 'en' || !original) {
+      return translated ?? original ?? ''
+    }
+    if (!translated || translated === original) {
+      return original
+    }
+    return (
+      <>
+        <span>{original}</span>
+        <span className="block mt-1.5 opacity-60 text-sm">{translated}</span>
+      </>
+    )
+  }
+
+  const getQuestionText = (question: any): ReactNode => {
     if (!question) return ''
     const originalText = question.question || question.questionText || ''
-    if (!selectedLanguage || !question.translations) return originalText
-    const translation = question.translations[selectedLanguage]
-    if (translation && typeof translation === 'object') {
-      const translatedText = (translation as any).text || (translation as any).question
-      if (translatedText) return translatedText
+    if (!selectedLanguage || !question.translations) {
+      return resolveDualText(originalText, undefined)
     }
-    return originalText
+    const translation = question.translations[selectedLanguage]
+    let translatedText: string | undefined
+    if (translation && typeof translation === 'object') {
+      translatedText = (translation as any).text || (translation as any).question
+    }
+    return resolveDualText(originalText, translatedText)
   }
 
-  const getOptionText = (option: any) => {
+  const getOptionText = (option: any): ReactNode => {
     if (!option) return ''
     const originalText = option.text || ''
-    if (!selectedLanguage || !option.translations) return originalText
-    const translation = option.translations[selectedLanguage]
-    if (translation && typeof translation === 'object' && 'text' in translation) {
-      return (translation as any).text || originalText
+    if (!selectedLanguage || !option.translations) {
+      return resolveDualText(originalText, undefined)
     }
-    return originalText
+    const translation = option.translations[selectedLanguage]
+    let translatedText: string | undefined
+    if (translation && typeof translation === 'object' && 'text' in translation) {
+      translatedText = (translation as any).text
+    }
+    return resolveDualText(originalText, translatedText)
   }
 
-  const getExplanationText = (explanation: any) => {
+  const getExplanationText = (explanation: any): string => {
     if (!explanation) return ''
     const originalText = explanation.text || ''
     if (!selectedLanguage || !explanation.translations) return originalText
@@ -94,6 +118,11 @@ export default function MockTestResultsPage() {
       if (translatedText) return translatedText
     }
     return originalText
+  }
+
+  const getOriginalExplanationText = (explanation: any): string => {
+    if (!explanation) return ''
+    return explanation.text || ''
   }
 
   const getCategoryName = (category: any) => {
@@ -468,9 +497,9 @@ export default function MockTestResultsPage() {
                       )
                     })()}
 
-                    <p className="text-base font-medium text-foreground leading-relaxed" dir={direction}>
+                    <div className="text-base font-medium text-foreground leading-relaxed" dir={direction}>
                       {getQuestionText(currentQuestion.question)}
-                    </p>
+                    </div>
                   </div>
 
                   <div className="px-2 pb-4 space-y-2.5">
@@ -523,12 +552,29 @@ export default function MockTestResultsPage() {
                           <BookOpenText size={11} />
                           {t('explanation')}
                         </p>
-                        <div
-                          className="text-sm text-foreground/70 font-light leading-relaxed prose prose-invert prose-sm max-w-none
-                                     prose-p:text-foreground/70 prose-strong:text-foreground/80 prose-ul:text-foreground/70 prose-ol:text-foreground/70 text-justify"
-                          dir={direction}
-                          dangerouslySetInnerHTML={{ __html: getExplanationText(currentQuestion.explanation) }}
-                        />
+                        {showOriginalAndTranslation && !!selectedLanguage && selectedLanguage !== 'en' && getOriginalExplanationText(currentQuestion.explanation) ? (
+                          <>
+                            <div
+                              className="text-sm text-foreground/70 font-light leading-relaxed prose prose-invert prose-sm max-w-none
+                                         prose-p:text-foreground/70 prose-strong:text-foreground/80 prose-ul:text-foreground/70 prose-ol:text-foreground/70 text-justify"
+                              dir={direction}
+                              dangerouslySetInnerHTML={{ __html: getOriginalExplanationText(currentQuestion.explanation) }}
+                            />
+                            <div
+                              className="mt-3 text-sm text-foreground/70 font-light leading-relaxed opacity-60 prose prose-invert prose-sm max-w-none
+                                         prose-p:text-foreground/70 prose-strong:text-foreground/80 prose-ul:text-foreground/70 prose-ol:text-foreground/70 text-justify"
+                              dir={direction}
+                              dangerouslySetInnerHTML={{ __html: getExplanationText(currentQuestion.explanation) }}
+                            />
+                          </>
+                        ) : (
+                          <div
+                            className="text-sm text-foreground/70 font-light leading-relaxed prose prose-invert prose-sm max-w-none
+                                       prose-p:text-foreground/70 prose-strong:text-foreground/80 prose-ul:text-foreground/70 prose-ol:text-foreground/70 text-justify"
+                            dir={direction}
+                            dangerouslySetInnerHTML={{ __html: getExplanationText(currentQuestion.explanation) }}
+                          />
+                        )}
 
                         {currentQuestion.explanation.assets && currentQuestion.explanation.assets.length > 0 && (() => {
                           const validAssets = currentQuestion.explanation.assets.filter(a => a.url)

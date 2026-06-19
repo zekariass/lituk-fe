@@ -65,10 +65,7 @@ export function SidebarNav() {
             {/* Wordmark */}
             <div className="leading-none">
               <span className="font-syne font-bold text-sm tracking-tight text-foreground">
-                Habesha
-              </span>
-              <span className="font-syne font-bold text-sm tracking-tight text-primary">
-                Drive
+                Life In The UK
               </span>
             </div>
           </Link>

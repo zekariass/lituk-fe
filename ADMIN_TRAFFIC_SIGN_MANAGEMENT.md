@@ -1031,7 +1031,7 @@ useEffect(() => {
 
 **Environment Variable:**
 ```env
-NEXT_PUBLIC_CDN_URL=https://cdn.habeshadrive.com
+NEXT_PUBLIC_CDN_URL=https://cdn.lifeintheuktestpractice.uk
 ```
 
 **Display Assets:**

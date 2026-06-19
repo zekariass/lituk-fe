@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useAuthStore, useUserStore, useCategoryStore, useRevisionStore } from '@/lib/store'
+import { useAuthStore, useUserStore, useCategoryStore, useRevisionStore, useLocalSettingsStore } from '@/lib/store'
 import {
   Mail, Calendar, Shield, MapPin, Settings,
   ChevronRight, Trophy, Target, TrendingUp,
-  Loader2, LogOut, ShieldCheck, Languages, Trash2, X,
+  Loader2, LogOut, ShieldCheck, Languages, Trash2, X, Globe,
 } from 'lucide-react'
 import { SubscriptionManagement } from '@/components/profile/subscription-management'
 import { useUserLanguageStore } from '@/lib/store/user-language-store'
@@ -23,6 +23,7 @@ export default function ProfilePage() {
   // const { progress, fetchProgress } = useRevisionStore()
   const { languages: jurisdictionLanguages, fetchJurisdictionLanguages } = useJurisdictionLanguageStore()
   const { userLanguages, setUserLanguages, isLoading: languagesLoading, setLoading, setError } = useUserLanguageStore()
+  const { showOriginalAndTranslation, setShowOriginalAndTranslation } = useLocalSettingsStore()
 
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [showAddLanguageDialog, setShowAddLanguageDialog] = useState(false)
@@ -437,6 +438,51 @@ export default function ProfilePage() {
                 </p>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* ── Translation ── */}
+        <div className="animate-fade-up delay-4
+                        bg-card border border-border rounded-2xl overflow-hidden
+                        shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
+
+          <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-border to-transparent" />
+
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="flex items-center justify-center w-7 h-7
+                                 rounded-lg bg-primary/[0.08] border border-primary/[0.12]">
+                  <Globe size={13} className="text-primary/70" />
+                </span>
+                <div>
+                  <h3 className="font-syne font-semibold text-[15px] text-foreground">
+                    Show Original & Translation
+                  </h3>
+                  <p className="text-xs text-muted-foreground/50 font-light mt-0.5">
+                    Display both English and translated text during practice
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={showOriginalAndTranslation}
+                onClick={() => setShowOriginalAndTranslation(!showOriginalAndTranslation)}
+                className={`relative w-11 h-6 rounded-full transition-colors duration-200 shrink-0
+                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40
+                            border-2
+                            ${showOriginalAndTranslation ? 'bg-primary border-primary' : 'bg-muted border-border'}`}
+              >
+                <span
+                  className={`absolute top-[2px] left-[2px] w-[18px] h-[18px] rounded-full
+                              bg-white border border-border/40 shadow-md
+                              transition-transform duration-200
+                              ${showOriginalAndTranslation ? 'translate-x-5' : 'translate-x-0'}`}
+                />
+              </button>
+            </div>
           </div>
         </div>
 

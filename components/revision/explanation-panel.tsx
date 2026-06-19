@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { Explanation } from '@/lib/types';
 import { sortAssets } from './content-utils';
@@ -9,7 +9,7 @@ import { X } from 'lucide-react';
 
 interface ExplanationPanelProps {
   explanation?: Explanation;
-  text: string;
+  text: ReactNode;
   title: string;
 }
 
@@ -38,13 +38,17 @@ export function ExplanationPanel({ explanation, text, title }: ExplanationPanelP
     <>
     <div className="space-y-3">
       {text ? (
-        <div 
-          className="text-sm leading-relaxed text-primary quill-content
-                     [&_p]:text-[hsl(var(--explanation-foreground))] [&_li]:text-[hsl(var(--explanation-foreground))]
-                     [&_strong]:text-[hsl(var(--explanation-foreground))] [&_strong]:font-semibold
-                     [&_a]:text-[hsl(var(--explanation-foreground))] [&_a]:underline text-justify"
-          dangerouslySetInnerHTML={{ __html: text }}
-        />
+        typeof text === 'string' ? (
+          <div
+            className="text-sm leading-relaxed text-primary quill-content
+                       [&_p]:text-[hsl(var(--explanation-foreground))] [&_li]:text-[hsl(var(--explanation-foreground))]
+                       [&_strong]:text-[hsl(var(--explanation-foreground))] [&_strong]:font-semibold
+                       [&_a]:text-[hsl(var(--explanation-foreground))] [&_a]:underline text-justify"
+            dangerouslySetInnerHTML={{ __html: text }}
+          />
+        ) : (
+          <div className="text-sm leading-relaxed text-primary">{text}</div>
+        )
       ) : null}
 
       {sorted.length > 0 && (

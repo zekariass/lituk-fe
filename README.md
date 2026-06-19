@@ -1,6 +1,6 @@
-# HabeshaDrive - Theory Test Platform
+# Life In The UK Test Practice
 
-A modern, multilingual driving theory test platform built with Next.js 16, featuring comprehensive admin tools, revision modes, and payment integration.
+A modern, multilingual Life in the UK test practice platform built with Next.js 16, featuring comprehensive admin tools, revision modes, and payment integration.
 
 ## 🚀 Features
 
@@ -77,7 +77,7 @@ A modern, multilingual driving theory test platform built with Next.js 16, featu
 
 ```bash
 git clone <repository-url>
-cd habeshadrive
+cd life-in-the-uk
 ```
 
 ### 2. Install dependencies
@@ -117,7 +117,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ## 📁 Project Structure
 
 ```
-habeshadrive/
+life-in-the-uk/
 ├── app/
 │   ├── [locale]/              # Internationalized routes
 │   │   ├── backoffice/        # Admin panel
