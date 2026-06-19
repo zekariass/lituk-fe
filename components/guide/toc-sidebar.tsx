@@ -36,7 +36,7 @@ export function TocSidebar({ items }: TocSidebarProps) {
   }, [items])
 
   return (
-    <nav className="hidden lg:block sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-4">
+    <nav className="hidden md:block sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-4">
       <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
         Contents
       </h4>

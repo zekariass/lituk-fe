@@ -5,7 +5,7 @@ import {
   Menu, X, LayoutGrid, Trophy, BookOpen, ClipboardList,
   CircleDollarSign, User, LogIn, LogOut, ChevronDown, Settings, Loader2, Download,
   Flag, MessageSquare, OctagonAlert,
-  Settings2,
+  Settings2, FileText,
 } from 'lucide-react'
 import { useAuthStore } from '@/lib/store'
 import { useTranslations } from 'next-intl'
@@ -111,6 +111,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
     { href: '/practice/mock-test',   activeHref: '/practice/mock-test',   label: t('mockTest'),   icon: ClipboardList },
     // { href: '/practice/leaderboard', activeHref: '/practice/leaderboard', label: t('leaderboard'), icon: Trophy },
     { href: '/practice/flags',  activeHref: '/practice/flags', label: t('flags'), icon: Flag},
+    { href: '/guide',  activeHref: '/guide', label: t('guide'), icon: FileText},
     // { href: '/practice/traffic-signs',  activeHref: '/practice/traffic-signs', label: t('trafficSigns'), icon: OctagonAlert}
   ]
 

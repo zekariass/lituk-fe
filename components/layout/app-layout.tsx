@@ -11,7 +11,7 @@ interface AppLayoutProps {
   children: React.ReactNode;
 }
 
-const publicRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/password/forgot-password', '/password/reset-password', '/privacy', '/terms', '/cookies', '/contact', '/contact/track', '/account-deletion'];
+const publicRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/password/forgot-password', '/password/reset-password', '/privacy', '/terms', '/cookies', '/contact', '/contact/track', '/account-deletion', '/guide'];
 const standaloneRoutes = ['/backoffice'];
 
 export function AppLayout({ children }: AppLayoutProps) {

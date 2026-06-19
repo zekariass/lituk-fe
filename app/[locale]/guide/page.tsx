@@ -50,14 +50,14 @@ export default async function GuidePage() {
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-12 sm:py-16">
         <Link
-          href="/practice"
+          href="/"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 no-underline"
         >
           <ArrowLeft size={16} />
-          Back to Practice
+          Back to Home
         </Link>
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-          <aside className="hidden lg:block flex-shrink-0 w-56">
+        <div className="flex flex-col md:flex-row gap-8 md:gap-12">
+          <aside className="hidden md:block flex-shrink-0 w-56">
             <TocSidebar items={rawHeadings} />
           </aside>
           <main className="flex-1 min-w-0">
